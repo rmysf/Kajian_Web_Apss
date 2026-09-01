@@ -49,9 +49,9 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
-                                <a href="{{ url('/organizer/kajian/'.$kajian->slug.'/peserta') }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" title="Lihat Peserta">
-                                    <i data-lucide="users" class="w-4 h-4 sm:mr-1.5"></i>
-                                    <span class="hidden sm:inline">Peserta</span>
+                                <a href="{{ route('organizer.kajian.show', $kajian->slug) }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" title="Detail">
+                                    <i data-lucide="eye" class="w-4 h-4 sm:mr-1.5"></i>
+                                    <span class="hidden sm:inline">Detail</span>
                                 </a>
                                 <a href="{{ route('organizer.kajian.edit', $kajian->slug) }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" title="Edit">
                                     <i data-lucide="edit" class="w-4 h-4 sm:mr-1.5"></i>

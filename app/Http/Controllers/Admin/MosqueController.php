@@ -3,62 +3,89 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mosque;
 use Illuminate\Http\Request;
 
 class MosqueController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        // Admin sees all mosques
-        $mosques = \App\Models\Mosque::with('organizer')->get();
+        $mosques = Mosque::latest()->paginate(10);
         return view('admin.mosque.index', compact('mosques'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        $organizers = \App\Models\Organizer::all();
-        return view('admin.mosque.create', compact('organizers'));
+        return view('admin.mosque.create');
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'organizer_id' => 'required|exists:organizers,id',
             'name' => 'required|string|max:255',
             'address' => 'required|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'google_maps_url' => 'nullable|url',
+            'google_maps_url' => 'nullable|url|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
-        
-        \App\Models\Mosque::create($validated);
+
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('mosques', 'public');
+        }
+
+        Mosque::create($validated);
 
         return redirect()->route('admin.mosque.index')->with('success', 'Masjid berhasil ditambahkan.');
     }
 
-    public function edit(\App\Models\Mosque $mosque)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Mosque $mosque)
     {
-        $organizers = \App\Models\Organizer::all();
-        return view('admin.mosque.edit', compact('mosque', 'organizers'));
+        return view('admin.mosque.edit', compact('mosque'));
     }
 
-    public function update(Request $request, \App\Models\Mosque $mosque)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Mosque $mosque)
     {
         $validated = $request->validate([
-            'organizer_id' => 'required|exists:organizers,id',
             'name' => 'required|string|max:255',
             'address' => 'required|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'google_maps_url' => 'nullable|url',
+            'google_maps_url' => 'nullable|url|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
+
+        if ($request->hasFile('photo')) {
+            if ($mosque->photo) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($mosque->photo);
+            }
+            $validated['photo'] = $request->file('photo')->store('mosques', 'public');
+        }
 
         $mosque->update($validated);
 
         return redirect()->route('admin.mosque.index')->with('success', 'Masjid berhasil diperbarui.');
     }
 
-    public function destroy(\App\Models\Mosque $mosque)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Mosque $mosque)
     {
         $mosque->delete();
         return redirect()->route('admin.mosque.index')->with('success', 'Masjid berhasil dihapus.');

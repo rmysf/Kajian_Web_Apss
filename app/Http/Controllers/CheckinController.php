@@ -39,6 +39,6 @@ class CheckinController extends Controller
         }
 
         return redirect()->route('kajian.show', $kajian->slug)
-            ->with('status', 'Check-in berhasil! Selamat mengikuti kajian.');
+            ->with('status', 'Alhamdulillah, Anda berhasil check-in kehadiran.');
     }
 }

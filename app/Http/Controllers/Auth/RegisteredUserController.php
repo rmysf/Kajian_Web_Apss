@@ -24,6 +24,14 @@ class RegisteredUserController extends Controller
     }
 
     /**
+     * Display the organizer registration view.
+     */
+    public function createOrganizer(): View
+    {
+        return view('auth.register-organizer');
+    }
+
+    /**
      * Handle an incoming registration request.
      *
      * @throws ValidationException
@@ -36,16 +44,27 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $role = $request->role === 'organizer' ? 'organizer' : 'user';
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $role,
         ]);
+
+        if ($role === 'organizer') {
+            \App\Models\Organizer::create([
+                'user_id' => $user->id,
+                'name' => $request->name,
+                'is_verified' => 0,
+            ]);
+        }
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect('/');
+        return redirect($role === 'organizer' ? '/organizer' : '/');
     }
 }

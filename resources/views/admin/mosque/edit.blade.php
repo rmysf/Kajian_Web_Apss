@@ -4,65 +4,100 @@
             <a href="{{ route('admin.mosque.index') }}" class="mr-4 text-gray-400 hover:text-gray-600">
                 <i data-lucide="arrow-left" class="w-6 h-6"></i>
             </a>
-            Edit Lokasi Masjid
+            Edit Masjid
         </div>
     </x-slot>
 
-    <div class="bg-white border border-gray-200 rounded-xl shadow-sm max-w-3xl mx-auto">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-lg font-bold text-brand-ink">Form Edit Lokasi</h2>
-            <p class="text-sm text-brand-ink-soft">Perbarui informasi masjid Anda.</p>
-        </div>
-
-        <form action="{{ route('admin.mosque.update', $mosque->id) }}" method="POST" class="p-6 space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8">
+        <form action="{{ route('admin.mosque.update', $mosque->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
-            <div>
-                <label for="organizer_id" class="block text-sm font-medium text-brand-ink">Penyelenggara Pemilik Masjid</label>
-                <select name="organizer_id" id="organizer_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-emerald-900 focus:ring-brand-emerald-900 sm:text-sm">
-                    <option value="">Pilih Penyelenggara...</option>
-                    @foreach($organizers as $org)
-                        <option value="{{ $org->id }}" {{ old('organizer_id', $mosque->organizer_id) == $org->id ? 'selected' : '' }}>{{ $org->name }}</option>
-                    @endforeach
-                </select>
-                @error('organizer_id') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-            </div>
-
-            <div>
-                <label for="name" class="block text-sm font-medium text-brand-ink">Nama Masjid</label>
-                <input type="text" name="name" id="name" value="{{ old('name', $mosque->name) }}" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-emerald-900 focus:ring-brand-emerald-900 sm:text-sm">
-                @error('name') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-            </div>
-
-            <div>
-                <label for="address" class="block text-sm font-medium text-brand-ink">Alamat Lengkap</label>
-                <textarea name="address" id="address" rows="3" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-emerald-900 focus:ring-brand-emerald-900 sm:text-sm">{{ old('address', $mosque->address) }}</textarea>
-                @error('address') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                <!-- Kolom Kiri: Informasi Utama -->
                 <div>
-                    <label for="latitude" class="block text-sm font-medium text-brand-ink">Latitude</label>
-                    <input type="text" name="latitude" id="latitude" value="{{ old('latitude', $mosque->latitude) }}" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-emerald-900 focus:ring-brand-emerald-900 sm:text-sm">
-                    @error('latitude') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                    <h3 class="text-base font-semibold text-[#0A2B20] border-b border-gray-100 pb-3 mb-5">
+                        Informasi Utama
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Nama Masjid -->
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Masjid <span class="text-red-500">*</span></label>
+                            <input type="text" name="name" id="name" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" required value="{{ old('name', $mosque->name) }}">
+                            @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        <!-- Foto Masjid -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Foto Masjid</label>
+                            @if($mosque->photo)
+                                <div class="mb-3">
+                                    <img src="{{ asset('storage/' . $mosque->photo) }}" alt="Foto Masjid" class="h-32 object-cover rounded-lg shadow-sm border border-gray-200">
+                                </div>
+                            @endif
+                            <div class="mt-1 flex justify-center items-center px-6 border-2 border-gray-200 border-dashed rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-colors relative group" style="min-height: 215px;">
+                                <div class="space-y-1 text-center">
+                                    <i data-lucide="image" class="mx-auto h-12 w-12 text-gray-400 group-hover:text-gray-500 mb-3"></i>
+                                    <div class="flex text-sm text-gray-600 justify-center">
+                                        <label for="photo" class="relative cursor-pointer rounded-md font-medium text-[#0A2B20] hover:text-[#0C3B2A] focus-within:outline-none">
+                                            <span class="font-bold">Pilih file</span>
+                                            <input id="photo" name="photo" type="file" class="sr-only" accept="image/*">
+                                        </label>
+                                        <p class="pl-1">atau drag and drop</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2">Format: JPG, PNG, WEBP. Maks 2MB.</p>
+                                </div>
+                            </div>
+                            @error('photo') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Kolom Kanan: Lokasi & Peta -->
                 <div>
-                    <label for="longitude" class="block text-sm font-medium text-brand-ink">Longitude</label>
-                    <input type="text" name="longitude" id="longitude" value="{{ old('longitude', $mosque->longitude) }}" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-emerald-900 focus:ring-brand-emerald-900 sm:text-sm">
-                    @error('longitude') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                    <h3 class="text-base font-semibold text-[#0A2B20] border-b border-gray-100 pb-3 mb-5">
+                        Lokasi & Peta
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Alamat Lengkap -->
+                        <div>
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap <span class="text-red-500">*</span></label>
+                            <textarea name="address" id="address" rows="5" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50 resize-none overflow-y-auto" required>{{ old('address', $mosque->address) }}</textarea>
+                            @error('address') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                        
+                        <!-- Latitude & Longitude -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="latitude" class="block text-sm font-medium text-gray-700 mb-1">Latitude <span class="text-red-500">*</span></label>
+                                <input type="text" name="latitude" id="latitude" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('latitude', $mosque->latitude) }}" required>
+                                @error('latitude') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
+                            <div>
+                                <label for="longitude" class="block text-sm font-medium text-gray-700 mb-1">Longitude <span class="text-red-500">*</span></label>
+                                <input type="text" name="longitude" id="longitude" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('longitude', $mosque->longitude) }}" required>
+                                @error('longitude') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
+                        </div>
+
+                        <!-- Link Google Maps -->
+                        <div>
+                            <label for="google_maps_url" class="block text-sm font-medium text-gray-700 mb-1">Link Google Maps (Opsional)</label>
+                            <input type="url" name="google_maps_url" id="google_maps_url" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('google_maps_url', $mosque->google_maps_url) }}">
+                            @error('google_maps_url') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div>
-                <label for="google_maps_url" class="block text-sm font-medium text-brand-ink">Link Google Maps (Opsional)</label>
-                <input type="url" name="google_maps_url" id="google_maps_url" value="{{ old('google_maps_url', $mosque->google_maps_url) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-emerald-900 focus:ring-brand-emerald-900 sm:text-sm">
-                @error('google_maps_url') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-            </div>
-
-            <div class="pt-5 border-t border-gray-200 flex justify-end">
-                <a href="{{ route('admin.mosque.index') }}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 mr-3">Batal</a>
-                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-emerald-900 hover:bg-brand-emerald-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-emerald-900">
+            <!-- Action Buttons -->
+            <div class="mt-10 flex justify-end gap-3 pt-6">
+                <a href="{{ route('admin.mosque.index') }}" class="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                    Batal
+                </a>
+                <button type="submit" class="px-6 py-2.5 text-sm font-medium text-white bg-brand-emerald-900 border border-transparent rounded-lg hover:bg-brand-emerald-950 transition-colors">
                     Simpan Perubahan
                 </button>
             </div>

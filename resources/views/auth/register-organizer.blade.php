@@ -176,11 +176,12 @@
             <div style="margin-bottom:8px;">
                 <h1 style="font-family:'Fraunces',serif; font-size:32px; font-weight:700; margin:0; color:var(--jade-950);">Kajian<em style="color:var(--gold); font-style:normal;">Ku</em></h1>
             </div>
-            <p style="color:var(--ink-soft); font-size:14px; margin:0;">Mari bergabung dan temukan majelis ilmu di sekitarmu</p>
+            <p style="color:var(--ink-soft); font-size:14px; margin:0;">Pendaftaran Penyelenggara Kajian</p>
         </div>
 
         <form method="POST" action="{{ route('register') }}" style="display:flex; flex-direction:column; gap:16px;">
             @csrf
+            <input type="hidden" name="role" value="organizer">
 
             <!-- Name -->
             <div style="display:flex; flex-direction:column; gap:6px;">
@@ -255,7 +256,7 @@
 
         <div style="margin-top:20px; text-align:center; font-size:13px; font-weight:500; color:var(--ink-soft);">
             Sudah punya akun? <a href="{{ route('login') }}" style="font-weight:700; color:var(--jade-900); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--jade-900)'">Masuk di sini</a> &nbsp;|&nbsp; 
-            Ingin bergabung sebagai penyelenggara? <a href="{{ route('register.organizer') }}" style="font-weight:700; color:var(--jade-900); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--jade-900)'">Daftar di sini</a>
+            Ingin mendaftar sebagai jamaah? <a href="{{ route('register') }}" style="font-weight:700; color:var(--jade-900); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--jade-900)'">Klik di sini</a>
         </div>
     </div>
 

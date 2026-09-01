@@ -92,9 +92,6 @@
                     <i data-lucide="calendar-check" class="w-5 h-5 mr-3 {{ request()->routeIs('organizer.kajian.*') ? 'text-[#E7C77E]' : '' }}"></i> Kelola Kajian
                 </a>
                 
-                <a href="{{ route('organizer.mosque.index') }}" class="flex items-center px-4 py-3.5 text-sm font-medium transition-all duration-200 rounded-xl {{ request()->routeIs('organizer.mosque.*') ? 'bg-white/15 text-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/10 ring-1 ring-white/5' : 'text-[#B7C9BE] hover:text-white hover:bg-white/10 hover:shadow-lg' }}">
-                    <i data-lucide="map-pin" class="w-5 h-5 mr-3 {{ request()->routeIs('organizer.mosque.*') ? 'text-[#E7C77E]' : '' }}"></i> Lokasi Masjid
-                </a>
 
                 <a href="{{ route('organizer.profile.edit') }}" class="flex items-center px-4 py-3.5 text-sm font-medium transition-all duration-200 rounded-xl {{ request()->routeIs('organizer.profile.*') ? 'bg-white/15 text-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/10 ring-1 ring-white/5' : 'text-[#B7C9BE] hover:text-white hover:bg-white/10 hover:shadow-lg' }}">
                     <i data-lucide="user" class="w-5 h-5 mr-3 {{ request()->routeIs('organizer.profile.*') ? 'text-[#E7C77E]' : '' }}"></i> Profil Penyelenggara

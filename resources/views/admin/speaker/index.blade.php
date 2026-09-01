@@ -42,7 +42,7 @@
                                 <button type="button" @click="detailModalOpen = true; selectedSpeaker = {{ json_encode($speakerData) }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" title="Detail">
                                     <i data-lucide="eye" class="w-4 h-4 sm:mr-1.5"></i> <span class="hidden sm:inline">Detail</span>
                                 </button>
-                                <button type="button" @click="deleteModalOpen = true; deleteFormAction = '{{ route('admin.speaker.destroy', $speaker->id) }}'" class="inline-flex items-center px-3 py-1.5 border border-brand-danger text-sm font-medium rounded-md text-white bg-brand-danger hover:bg-red-700 transition" title="Hapus">
+                                <button type="button" @click="deleteModalOpen = true; deleteFormAction = '{{ route('admin.speaker.destroy', $speaker->id) }}'" class="inline-flex items-center px-3 py-1.5 border border-red-200 text-sm font-medium rounded-md text-red-600 bg-red-50 hover:bg-red-100 transition" title="Hapus">
                                     <i data-lucide="trash-2" class="w-4 h-4 sm:mr-1.5"></i> <span class="hidden sm:inline">Hapus</span>
                                 </button>
                             </td>
@@ -82,7 +82,7 @@
                      role="dialog" aria-modal="true" aria-labelledby="modal-headline">
                     <div class="sm:flex sm:items-start">
                         <div class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-red-100 rounded-full sm:mx-0 sm:h-10 sm:w-10">
-                            <i data-lucide="alert-triangle" class="w-6 h-6 text-brand-danger"></i>
+                            <i data-lucide="alert-triangle" class="w-6 h-6 text-red-600"></i>
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-headline">
@@ -99,7 +99,7 @@
                         <form :action="deleteFormAction" method="POST" class="inline-block w-full sm:w-auto">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-brand-danger border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-danger sm:ml-3 sm:w-auto sm:text-sm">
+                            <button type="submit" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 sm:ml-3 sm:w-auto sm:text-sm">
                                 Ya, Hapus
                             </button>
                         </form>

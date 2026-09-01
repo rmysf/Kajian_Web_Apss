@@ -13,16 +13,17 @@ use App\Http\Controllers\ProfileController;
 // Organizer Controllers
 use App\Http\Controllers\Organizer\DashboardController as OrganizerDashboardController;
 use App\Http\Controllers\Organizer\KajianController as OrganizerKajianController;
-use App\Http\Controllers\Organizer\MosqueController as OrganizerMosqueController;
+
 use App\Http\Controllers\Organizer\ParticipantController as OrganizerParticipantController;
 
 // Admin Controllers
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\KajianController as AdminKajianController;
 use App\Http\Controllers\Admin\OrganizerController as AdminOrganizerController;
-use App\Http\Controllers\Admin\MosqueController as AdminMosqueController;
+
 use App\Http\Controllers\Admin\SpeakerController as AdminSpeakerController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\MosqueController as AdminMosqueController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 /*
@@ -62,7 +63,6 @@ Route::prefix('organizer')->middleware(['auth', 'role:organizer'])->group(functi
     Route::resource('kajian', OrganizerKajianController::class)->names('organizer.kajian');
     Route::get('/kajian/{kajian}/peserta', [OrganizerParticipantController::class, 'index']);
     
-    Route::resource('mosque', OrganizerMosqueController::class)->names('organizer.mosque');
     
     Route::get('/profile', [App\Http\Controllers\Organizer\ProfileController::class, 'edit'])->name('organizer.profile.edit');
     Route::put('/profile', [App\Http\Controllers\Organizer\ProfileController::class, 'update'])->name('organizer.profile.update');
@@ -78,8 +78,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index']);
     
     Route::resource('category', AdminCategoryController::class)->names('admin.category');
-    Route::resource('speaker', AdminSpeakerController::class)->names('admin.speaker');
     Route::resource('mosque', AdminMosqueController::class)->names('admin.mosque');
+    Route::resource('speaker', AdminSpeakerController::class)->names('admin.speaker');
     Route::resource('kajian', AdminKajianController::class)->names('admin.kajian');
     Route::post('kajian/{kajian}/verify', [AdminKajianController::class, 'verify'])->name('admin.kajian.verify');
     Route::post('kajian/{kajian}/reject', [AdminKajianController::class, 'reject'])->name('admin.kajian.reject');
