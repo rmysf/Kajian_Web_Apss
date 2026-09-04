@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/swup@4"></script>
 <style>
   :root{
     --parchment:#F4EEDC;
@@ -37,6 +38,7 @@
     margin:0;
     padding:0;
     width:100%;
+    max-width:100vw;
     overflow-x:hidden;
   }
   body{
@@ -552,10 +554,22 @@
     .about-frame { border-radius: 120px 120px 24px 24px; }
     .about-frame::before { border-radius: 120px 120px 24px 24px; }
   }
+
+  /* Swup Transition Styles (No Animation) */
+  html.is-animating .transition-fade {
+      opacity: 1;
+      transform: none;
+  }
+  .transition-fade {
+      transition: none;
+      opacity: 1;
+      transform: none;
+  }
 </style>
 </head>
 <body>
 
+<main id="swup" class="transition-fade">
 <nav class="mainnav">
   <div class="container nav-inner">
     <a href="{{ url('/') }}" class="brand">
@@ -713,6 +727,10 @@
     window.addEventListener('hashchange', updateActiveState);
     document.addEventListener('turbo:render', updateActiveState);
 })();
+</script>
+</main>
+<script>
+    const swup = new Swup();
 </script>
 </body>
 </html>

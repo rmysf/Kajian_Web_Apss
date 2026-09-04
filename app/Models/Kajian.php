@@ -172,6 +172,10 @@ class Kajian extends Model
         if ($this->status === 'cancelled') {
             return 'Dibatalkan';
         }
+        
+        if ($this->status === 'rejected') {
+            return 'Ditolak';
+        }
 
         $now = now();
 

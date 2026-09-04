@@ -17,29 +17,33 @@
         }
     }">
         <div class="bg-white border border-gray-200 rounded-xl shadow-sm mb-6">
-            <div class="p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+            <div class="p-6 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 class="text-lg font-bold text-brand-ink">Daftar Pengguna</h2>
+                    <h2 class="text-lg font-bold text-brand-ink whitespace-nowrap">Daftar Pengguna</h2>
                     <p class="text-sm text-brand-ink-soft">Kelola akun dan profil pengguna sistem.</p>
                 </div>
-                <a href="{{ route('admin.user.create') }}" class="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 bg-brand-emerald-900 text-white text-sm font-medium rounded-lg hover:bg-brand-emerald-950 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-emerald-900">
-                    <i data-lucide="plus-circle" class="w-4 h-4 mr-2"></i> Tambah Pengguna
-                </a>
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <form action="{{ route('admin.user.index') }}" method="GET" class="relative flex-1 md:flex-none md:w-64">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari pengguna..." class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-emerald-500 focus:border-brand-emerald-500 block w-full pl-9 pr-8 py-2 shadow-sm transition outline-none">
+                        @if(request('search'))
+                            <a href="{{ route('admin.user.index') }}" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </a>
+                        @endif
+                    </form>
+                    <a href="{{ route('admin.user.create') }}" class="shrink-0 inline-flex justify-center items-center px-4 py-2 bg-brand-emerald-900 text-white text-sm font-medium rounded-lg hover:bg-brand-emerald-950 transition shadow-sm whitespace-nowrap">
+                        <i data-lucide="plus-circle" class="w-4 h-4 sm:mr-2"></i> <span class="hidden sm:inline">Tambah Pengguna</span><span class="sm:hidden">Tambah</span>
+                    </a>
+                </div>
             </div>
 
-            @if(session('success'))
-                <div class="bg-green-50 text-green-800 p-4 border-b border-green-200 text-sm">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="bg-red-50 text-red-800 p-4 border-b border-red-200 text-sm">
-                    {{ session('error') }}
-                </div>
-            @endif
+
 
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left border-collapse whitespace-nowrap">
                     <thead>
                         <tr class="bg-gray-50 border-b border-gray-200">
                             <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider">Nama</th>
@@ -64,7 +68,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-right space-x-2">
                                     <a href="{{ route('admin.user.edit', $user->id) }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" title="Edit Akun">
-                                        <i data-lucide="edit-2" class="w-4 h-4 sm:mr-1.5"></i> <span class="hidden sm:inline">Edit</span>
+                                        <i data-lucide="edit" class="w-4 h-4 sm:mr-1.5"></i> <span class="hidden sm:inline">Edit</span>
                                     </a>
                                     <button type="button" @click="openDeleteModal({{ json_encode([
                                         'id' => $user->id,
@@ -82,6 +86,10 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+            
+            <div class="px-6 py-4 border-t border-gray-200">
+                {{ $users->links() }}
             </div>
         </div>
 

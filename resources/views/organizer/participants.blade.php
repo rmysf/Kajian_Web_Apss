@@ -11,25 +11,24 @@
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm">
         <div class="p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div>
-                <h2 class="text-lg font-bold text-brand-ink">Daftar Peserta</h2>
-                <p class="text-sm text-brand-ink-soft">Melihat daftar jamaah yang mendaftar dan hadir pada kajian ini.</p>
+                <h2 class="text-lg font-bold text-brand-ink">Daftar Hadirin & Calon Peserta</h2>
+                <p class="text-sm text-brand-ink-soft">Melihat daftar jamaah yang sudah hadir maupun calon peserta yang baru mendaftar pada kajian ini.</p>
             </div>
             <div class="mt-4 sm:mt-0 flex space-x-2">
                 <button type="button" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-sm font-medium rounded-lg text-brand-ink hover:bg-gray-50 transition">
-                    <i data-lucide="download" class="w-4 h-4 mr-2"></i> Export Data
+                    <i data-lucide="download" class="w-4 h-4 mr-2"></i> Unduh Data
                 </button>
             </div>
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200">
                         <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider">Nama Peserta</th>
                         <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider">Kontak</th>
                         <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider">Waktu Daftar</th>
                         <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider">Status Kehadiran</th>
-                        <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -53,20 +52,6 @@
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-emerald-100 text-brand-emerald-950">Hadir</span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Dibatalkan</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                @if($attendee->status === 'registered')
-                                    <!-- Here we can add a check-in form later if needed -->
-                                    <button type="button" class="inline-flex items-center px-3 py-1.5 border border-brand-emerald-900 text-sm font-medium rounded-md text-white bg-brand-emerald-900 hover:bg-brand-emerald-950 transition">
-                                        <i data-lucide="check-circle" class="w-4 h-4 sm:mr-1.5"></i>
-                                        <span class="hidden sm:inline">Check In</span>
-                                    </button>
-                                @else
-                                    <button type="button" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" disabled>
-                                        <i data-lucide="check" class="w-4 h-4 sm:mr-1.5 text-brand-emerald-900"></i>
-                                        <span class="hidden sm:inline">Selesai</span>
-                                    </button>
                                 @endif
                             </td>
                         </tr>

@@ -35,6 +35,7 @@
                         
                         <div class="text-center">
                             <p class="text-xs text-gray-500">Format: JPG, PNG, WEBP. Maks 2MB.</p>
+                            <p x-show="fileError" x-text="fileError" class="mt-2 text-sm text-red-500" style="display: none;"></p>
                             @error('photo')
                                 <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                             @enderror
@@ -81,22 +82,28 @@
         </form>
     </div>
 
-    <!-- Alpine Component for Image Preview -->
     <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('photoPreview', () => ({
+        function photoPreview() {
+            return {
                 imageUrl: null,
+                fileError: null,
                 fileChosen(event) {
-                    this.fileToDataUrl(event, src => this.imageUrl = src)
+                    if (! event.target.files.length) return;
+                    let file = event.target.files[0];
+                    if (file.size > 2 * 1024 * 1024) {
+                        this.fileError = 'Ukuran file maksimal adalah 2MB. Silakan pilih file yang lebih kecil.';
+                        event.target.value = '';
+                        return;
+                    }
+                    this.fileError = null;
+                    this.fileToDataUrl(file, src => this.imageUrl = src)
                 },
-                fileToDataUrl(event, callback) {
-                    if (! event.target.files.length) return
-                    let file = event.target.files[0],
-                        reader = new FileReader()
+                fileToDataUrl(file, callback) {
+                    let reader = new FileReader()
                     reader.readAsDataURL(file)
                     reader.onload = e => callback(e.target.result)
                 },
-            }))
-        })
+            }
+        }
     </script>
 </x-admin-layout>

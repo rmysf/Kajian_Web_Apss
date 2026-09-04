@@ -5,14 +5,27 @@
 
     <div x-data="{ deleteModalOpen: false, deleteFormAction: '' }" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <!-- Card Header -->
-        <div class="p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 gap-4">
-            <div>
+        <div class="p-6 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4">
+            <div class="min-w-[250px]">
                 <h2 class="text-lg font-bold text-gray-900">Daftar Masjid</h2>
                 <p class="text-sm text-gray-500 mt-1">Kelola data masjid utama yang bisa dipilih oleh penyelenggara.</p>
             </div>
-            <a href="{{ route('admin.mosque.create') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-brand-emerald-900 rounded-md hover:bg-brand-emerald-950 transition-colors shrink-0">
-                <i data-lucide="plus" class="w-4 h-4 mr-2"></i> TAMBAH MASJID
-            </a>
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <form action="{{ route('admin.mosque.index') }}" method="GET" class="relative flex-1 md:flex-none md:w-64">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+                    </div>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari masjid atau alamat..." class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-emerald-500 focus:border-brand-emerald-500 block w-full pl-9 pr-8 py-2 shadow-sm transition outline-none">
+                    @if(request('search'))
+                        <a href="{{ route('admin.mosque.index') }}" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </a>
+                    @endif
+                </form>
+                <a href="{{ route('admin.mosque.create') }}" class="shrink-0 inline-flex justify-center items-center px-4 py-2 bg-brand-emerald-900 text-white text-sm font-medium rounded-lg hover:bg-brand-emerald-950 transition shadow-sm whitespace-nowrap">
+                    <i data-lucide="plus" class="w-4 h-4 sm:mr-2"></i> <span class="hidden sm:inline">TAMBAH MASJID</span><span class="sm:hidden">TAMBAH</span>
+                </a>
+            </div>
         </div>
 
         <!-- Table -->
@@ -21,7 +34,7 @@
                 <thead class="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-100">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-medium tracking-wider">Nama Masjid</th>
-                        <th scope="col" class="px-6 py-4 font-medium tracking-wider">Lokasi</th>
+                        <th scope="col" class="px-6 py-4 font-medium tracking-wider">Alamat Lengkap</th>
                         <th scope="col" class="px-6 py-4 font-medium tracking-wider text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -36,12 +49,14 @@
                             </td>
                             <td class="px-6 py-5">
                                 <div class="flex items-center justify-end gap-2">
-                                    <a href="{{ route('admin.mosque.edit', $mosque->id) }}" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
-                                        <i data-lucide="edit-2" class="w-3.5 h-3.5 mr-1.5 text-gray-500"></i> Edit
+                                    <a href="{{ route('admin.mosque.edit', $mosque->id) }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" title="Edit">
+                                        <i data-lucide="edit" class="w-4 h-4 sm:mr-1.5"></i>
+                                        <span class="hidden sm:inline">Edit</span>
                                     </a>
                                     
-                                    <button type="button" @click="deleteModalOpen = true; deleteFormAction = '{{ route('admin.mosque.destroy', $mosque->id) }}'" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-600 bg-white border border-red-200 rounded-md hover:bg-red-50 transition-colors">
-                                        <i data-lucide="trash-2" class="w-3.5 h-3.5 mr-1.5"></i> Hapus
+                                    <button type="button" @click="deleteModalOpen = true; deleteFormAction = '{{ route('admin.mosque.destroy', $mosque->id) }}'" class="inline-flex items-center px-3 py-1.5 border border-red-200 text-sm font-medium rounded-md text-red-600 bg-red-50 hover:bg-red-100 transition" title="Hapus">
+                                        <i data-lucide="trash-2" class="w-4 h-4 sm:mr-1.5"></i>
+                                        <span class="hidden sm:inline">Hapus</span>
                                     </button>
                                 </div>
                             </td>
@@ -99,6 +114,10 @@
                         </button>
                     </div>
                 </div>
+            </div>
+            
+            <div class="px-6 py-4 border-t border-gray-200">
+                {{ $mosques->links() }}
             </div>
         </div>
     </div>

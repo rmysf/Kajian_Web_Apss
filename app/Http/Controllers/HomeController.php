@@ -19,15 +19,15 @@ class HomeController extends Controller
 
         if ($lat && $lng) {
             $kajians = clone $query;
-            $kajians = $kajians->nearby($lat, $lng, 5)->get();
+            $kajians = $kajians->nearby($lat, $lng, 5)->take(3)->get();
             
-            if ($kajians->isEmpty()) {
+            if ($kajians->count() < 3) {
                 $fallbackQuery = clone $query;
-                $kajians = $fallbackQuery->nearby($lat, $lng, 10)->get();
+                $kajians = $fallbackQuery->nearby($lat, $lng, 50)->take(3)->get();
             }
         } else {
             // Jika tidak ada lokasi, tampilkan upcoming terbaru
-            $kajians = $query->nearby(null, null)->get();
+            $kajians = $query->nearby(null, null)->take(3)->get();
         }
 
         return view('home', compact('kajians', 'categories', 'lat', 'lng'));

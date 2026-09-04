@@ -1,6 +1,5 @@
 <x-organizer-layout>
     <x-slot name="header">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <div class="flex items-center">
             <a href="{{ route('organizer.kajian.index') }}" class="mr-4 text-gray-400 hover:text-gray-600">
                 <i data-lucide="arrow-left" class="w-6 h-6"></i>
@@ -52,22 +51,52 @@
                         </div>
 
                         <!-- Poster -->
-                        <div>
+                        <div x-data="{ imageUrl: null, fileError: null }">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Poster Kajian</label>
-                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-200 border-dashed rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors relative group">
-                                <div class="space-y-1 text-center">
-                                    <i data-lucide="image-plus" class="mx-auto h-8 w-8 text-gray-400 group-hover:text-gray-500"></i>
-                                    <div class="flex text-sm text-gray-600 justify-center">
+                            
+                            <input id="poster" name="poster" type="file" class="sr-only" accept="image/*" @change="
+                                const file = $event.target.files[0];
+                                if (file) {
+                                    if (file.size > 2 * 1024 * 1024) {
+                                        fileError = 'Ukuran file maksimal adalah 2MB. Silakan pilih file yang lebih kecil.';
+                                        $event.target.value = '';
+                                        return;
+                                    }
+                                    fileError = null;
+                                    const reader = new FileReader();
+                                    reader.onload = (e) => { imageUrl = e.target.result; };
+                                    reader.readAsDataURL(file);
+                                } else {
+                                    imageUrl = null;
+                                    fileError = null;
+                                }
+                            ">
+
+                            <div class="mt-1 flex justify-center border-2 border-gray-200 border-dashed rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors relative overflow-hidden"
+                                 :class="{'p-0': imageUrl, 'px-6 pt-5 pb-6': !imageUrl}">
+                                 
+                                <div class="relative w-full h-48 sm:h-64 group" x-show="imageUrl" style="display: none;" x-cloak>
+                                    <img :src="imageUrl" class="w-full h-full object-contain bg-gray-50 rounded-lg">
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
+                                        <label for="poster" class="cursor-pointer bg-white text-gray-800 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-100 flex items-center shadow-sm">
+                                            <i data-lucide="edit-2" class="w-4 h-4 mr-2"></i> Ganti Foto
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1 text-center" x-show="!imageUrl">
+                                    <i data-lucide="image-plus" class="mx-auto h-8 w-8 text-gray-400"></i>
+                                    <div class="flex text-sm text-gray-600 justify-center mt-2">
                                         <label for="poster" class="relative cursor-pointer rounded-md font-medium text-brand-emerald-900 hover:text-brand-emerald-800 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-brand-emerald-900">
                                             <span>Pilih file</span>
-                                            <input id="poster" name="poster" type="file" class="sr-only" accept="image/*">
                                         </label>
                                         <p class="pl-1">atau drag and drop</p>
                                     </div>
-                                    <p class="text-xs text-gray-500">Format: JPG, PNG, WEBP. Maks 2MB.</p>
+                                    <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, WEBP. Maks 2MB.</p>
                                 </div>
                             </div>
                             @error('poster') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            <p x-show="fileError" x-text="fileError" class="text-red-500 text-xs mt-1" style="display: none;"></p>
                         </div>
 
                         <!-- Deskripsi -->
@@ -108,14 +137,26 @@
 
                         <!-- Masjid/Lokasi -->
                         <div>
-                            <label for="mosque_id" class="block text-sm font-medium text-gray-700 mb-1">Masjid / Lokasi <span class="text-red-500">*</span></label>
-                            <select name="mosque_id" id="mosque_id" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50 text-gray-600" required>
-                                <option value="" disabled selected>Contoh: Masjid Raya Bintaro Jaya</option>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Masjid / Lokasi</label>
+                            
+                            <select name="mosque_id" id="mosque_id" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50 text-gray-600">
+                                <option value="" {{ old('mosque_id') == '' ? 'selected' : '' }}>-- Pilih atau Ketik Manual --</option>
                                 @foreach($mosques as $mosque)
                                     <option value="{{ $mosque->id }}" {{ old('mosque_id') == $mosque->id ? 'selected' : '' }}>{{ $mosque->name }}</option>
                                 @endforeach
                             </select>
+                            
+                            <div class="relative" id="custom_mosque_wrapper" style="display:none;">
+                                <input type="text" name="custom_mosque_name" id="custom_mosque_name" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50 pr-10" placeholder="Ketik nama masjid / lokasi..." value="{{ old('custom_mosque_name') }}">
+                                <div id="btn_cancel_manual" class="absolute inset-y-0 right-0 flex items-center pr-2 cursor-pointer" title="Kembali ke Pilihan">
+                                    <svg class="h-5 w-5 text-gray-400 hover:text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+                            
                             @error('mosque_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            @error('custom_mosque_name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
 
                         <!-- Alamat -->
@@ -129,12 +170,12 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label for="latitude" class="block text-sm font-medium text-gray-700 mb-1">Latitude <span class="text-red-500">*</span></label>
-                                <input type="text" name="latitude" id="latitude" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('latitude', '-6.200000') }}" required>
+                                <input type="text" name="latitude" id="latitude" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('latitude', '-6.200000') }}" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.-]/g, '')">
                                 @error('latitude') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label for="longitude" class="block text-sm font-medium text-gray-700 mb-1">Longitude <span class="text-red-500">*</span></label>
-                                <input type="text" name="longitude" id="longitude" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('longitude', '106.816666') }}" required>
+                                <input type="text" name="longitude" id="longitude" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('longitude', '106.816666') }}" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.-]/g, '')">
                                 @error('longitude') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                         </div>
@@ -184,7 +225,7 @@
                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <span class="text-gray-500 sm:text-sm">Rp</span>
                             </div>
-                            <input type="number" name="price" id="price" class="block w-full rounded-md border-gray-200 pl-10 focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50 bg-gray-50" placeholder="0" value="{{ old('price') }}" disabled>
+                            <input type="text" name="price" id="price" class="block w-full rounded-md border-gray-200 pl-10 focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" placeholder="0" value="{{ old('price') }}" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
@@ -192,7 +233,7 @@
                     <!-- Kuota Peserta -->
                     <div>
                         <label for="quota" class="block text-sm font-medium text-gray-700 mb-1">Kuota Peserta</label>
-                        <input type="number" name="quota" id="quota" min="1" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" placeholder="Kosongkan jika tak terbatas" value="{{ old('quota') }}">
+                        <input type="text" name="quota" id="quota" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" placeholder="Kosongkan jika tak terbatas" value="{{ old('quota') }}" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         @error('quota') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
@@ -233,9 +274,15 @@
         </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        (function() {
+            const mosquesData = @json($mosques);
+
+            function initKajianForm() {
+            // Prevent double initialization
+            const formContainer = document.getElementById('mosque_id');
+            if (!formContainer || formContainer.dataset.initialized) return;
+            formContainer.dataset.initialized = 'true';
             // Inisialisasi Flatpickr untuk Jam (Format 24 Jam)
             flatpickr("#start_time", {
                 enableTime: true,
@@ -256,19 +303,102 @@
             const priceContainer = document.getElementById('price_container');
 
             function togglePrice() {
-                if (radioFree.checked) {
-                    priceContainer.style.display = 'none';
-                    priceInput.value = '';
-                } else {
-                    priceContainer.style.display = 'block';
+                if (priceInput) {
+                    if (radioFree && radioFree.checked) {
+                        priceInput.disabled = true;
+                        priceInput.value = '';
+                        priceInput.classList.add('bg-gray-100', 'cursor-not-allowed');
+                        priceInput.classList.remove('bg-white');
+                    } else {
+                        priceInput.disabled = false;
+                        priceInput.classList.remove('bg-gray-100', 'cursor-not-allowed');
+                        priceInput.classList.add('bg-white');
+                    }
                 }
             }
 
-            radioFree.addEventListener('change', togglePrice);
-            radioPaid.addEventListener('change', togglePrice);
-            
-            // Run once on load
-            togglePrice();
-        });
+            if(radioFree && radioPaid) {
+                radioFree.addEventListener('change', togglePrice);
+                radioPaid.addEventListener('change', togglePrice);
+                // Run once on load
+                togglePrice();
+            }
+
+            // Autofill Masjid Data
+            const mosqueSelect = document.getElementById('mosque_id');
+            const customMosqueInput = document.getElementById('custom_mosque_name');
+            const customMosqueWrapper = document.getElementById('custom_mosque_wrapper');
+            const btnCancelManual = document.getElementById('btn_cancel_manual');
+            const addressTextarea = document.getElementById('address');
+            const latInput = document.getElementById('latitude');
+            const lngInput = document.getElementById('longitude');
+
+            function showManualInput() {
+                if (mosqueSelect) mosqueSelect.style.display = 'none';
+                if (customMosqueWrapper) {
+                    customMosqueWrapper.style.display = 'block';
+                }
+                if (customMosqueInput) {
+                    customMosqueInput.focus();
+                }
+                
+                addressTextarea.value = '';
+                latInput.value = '';
+                lngInput.value = '';
+            }
+
+            function showSelectDropdown() {
+                if (mosqueSelect) {
+                    mosqueSelect.style.display = 'block';
+                    mosqueSelect.value = ''; // Reset select to default option
+                }
+                if (customMosqueWrapper) {
+                    customMosqueWrapper.style.display = 'none';
+                }
+                if (customMosqueInput) {
+                    customMosqueInput.value = '';
+                }
+            }
+
+            if (btnCancelManual) {
+                btnCancelManual.addEventListener('click', showSelectDropdown);
+            }
+
+            function handleMosqueChange() {
+                const selectedId = mosqueSelect.value;
+                if (!selectedId || selectedId === '') {
+                    // Manual entry
+                    showManualInput();
+                } else {
+                    // Fill fields based on selected mosque
+                    const selectedMosque = mosquesData.find(m => m.id == selectedId);
+                    if (selectedMosque) {
+                        addressTextarea.value = selectedMosque.address;
+                        latInput.value = selectedMosque.latitude;
+                        lngInput.value = selectedMosque.longitude;
+                    }
+                }
+            }
+
+            if (mosqueSelect) {
+                mosqueSelect.addEventListener('change', handleMosqueChange);
+                // Check on load if we should show manual input (e.g. validation failed)
+                if ((!mosqueSelect.value || mosqueSelect.value === '') && customMosqueInput && customMosqueInput.value !== '') {
+                    showManualInput();
+                }
+            }
+        }
+
+        // Run immediately if DOM is ready, otherwise wait for DOMContentLoaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initKajianForm);
+        } else {
+            initKajianForm();
+        }
+
+        // Listen for SPA navigations (Turbo / Livewire)
+        document.addEventListener('turbo:load', initKajianForm);
+        document.addEventListener('livewire:navigated', initKajianForm);
+        })();
     </script>
 </x-organizer-layout>

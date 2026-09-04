@@ -11,10 +11,19 @@ class MosqueController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $mosques = Mosque::latest()->paginate(10);
-        return view('admin.mosque.index', compact('mosques'));
+        $search = $request->input('search');
+        
+        $mosques = Mosque::when($search, function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                      ->orWhere('address', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+            
+        return view('admin.mosque.index', compact('mosques', 'search'));
     }
 
     /**
@@ -35,7 +44,7 @@ class MosqueController extends Controller
             'address' => 'required|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'google_maps_url' => 'nullable|url|max:255',
+            'google_maps_url' => 'required|url|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
@@ -66,7 +75,7 @@ class MosqueController extends Controller
             'address' => 'required|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'google_maps_url' => 'nullable|url|max:255',
+            'google_maps_url' => 'required|url|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 

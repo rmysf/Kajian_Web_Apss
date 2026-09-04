@@ -33,13 +33,25 @@ class FavoriteController extends Controller
 
         if ($favorite) {
             $favorite->delete();
-            return back()->with('status', 'Kajian dihapus dari daftar tersimpan.');
+            $status = 'Kajian dihapus dari daftar tersimpan.';
+            $isFavorited = false;
         } else {
             Favorite::create([
                 'user_id' => Auth::id(),
                 'kajian_id' => $kajian->id,
             ]);
-            return back()->with('status', 'Kajian berhasil disimpan!');
+            $status = 'Kajian berhasil disimpan!';
+            $isFavorited = true;
         }
+
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'status' => $status,
+                'is_favorited' => $isFavorited
+            ]);
+        }
+
+        return back()->with('status', $status);
     }
 }

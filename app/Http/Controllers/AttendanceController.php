@@ -27,12 +27,12 @@ class AttendanceController extends Controller
      */
     public function store(Kajian $kajian)
     {
-        // Cek jika sudah terdaftar
-        $exists = KajianAttendee::where('user_id', Auth::id())
+        // Cek jika sudah terdaftar dan tidak dibatalkan
+        $attendee = KajianAttendee::where('user_id', Auth::id())
             ->where('kajian_id', $kajian->id)
-            ->exists();
+            ->first();
 
-        if ($exists) {
+        if ($attendee && $attendee->status !== 'cancelled') {
             return back()->with('status', 'Anda sudah terdaftar di kajian ini.');
         }
 
@@ -47,11 +47,17 @@ class AttendanceController extends Controller
             }
         }
 
-        KajianAttendee::create([
-            'user_id' => Auth::id(),
-            'kajian_id' => $kajian->id,
-            'status' => 'registered', // registered | attended | cancelled
-        ]);
+        if ($attendee) {
+            // Jika sebelumnya dibatalkan, aktifkan kembali
+            $attendee->update(['status' => 'registered']);
+        } else {
+            // Jika belum pernah daftar sama sekali
+            KajianAttendee::create([
+                'user_id' => Auth::id(),
+                'kajian_id' => $kajian->id,
+                'status' => 'registered',
+            ]);
+        }
 
         return back()->with('status', 'Berhasil mendaftar! Anda akan menghadiri kajian ini.');
     }

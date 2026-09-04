@@ -54,17 +54,33 @@ class RegisteredUserController extends Controller
         ]);
 
         if ($role === 'organizer') {
+            $organizerRules = [
+                'phone' => ['required', 'string', 'max:20'],
+                'address' => ['required', 'string'],
+                'description' => ['nullable', 'string'],
+                'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            ];
+            
+            $organizerData = $request->validate($organizerRules);
+
+            $logoPath = null;
+            if ($request->hasFile('logo')) {
+                $logoPath = $request->file('logo')->store('organizers', 'public');
+            }
+
             \App\Models\Organizer::create([
                 'user_id' => $user->id,
                 'name' => $request->name,
+                'phone' => $organizerData['phone'],
+                'address' => $organizerData['address'],
+                'description' => $organizerData['description'] ?? null,
+                'logo' => $logoPath,
                 'is_verified' => 0,
             ]);
         }
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect($role === 'organizer' ? '/organizer' : '/');
+        return redirect()->route('login')->with('status', 'Pendaftaran berhasil! Silakan masuk ke akun Anda sesuai dengan role yang telah didaftarkan.');
     }
 }

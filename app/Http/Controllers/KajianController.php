@@ -68,7 +68,7 @@ class KajianController extends Controller
             $query->orderBy('start_at', 'ASC');
         }
 
-        $kajians = $query->paginate(10)->appends($request->query());
+        $kajians = $query->paginate(6)->appends($request->query());
         $categories = Category::orderBy('name')->get();
 
         return view('kajian.index', compact('kajians', 'categories'));

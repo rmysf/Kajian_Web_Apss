@@ -21,10 +21,51 @@
                 $isFavorited = \App\Models\Favorite::where('user_id', auth()->id())->where('kajian_id', $kajian->id)->exists();
             }
         @endphp
-        <form action="{{ url('/kajian/'.$kajian->id.'/favorite') }}" method="POST" style="position:absolute; top:16px; right:16px; z-index:10;">
+        <form action="{{ url('/kajian/'.$kajian->slug.'/favorite') }}" method="POST" style="position:absolute; top:16px; right:16px; z-index:10;" onsubmit="handleFavoriteToggle(event, this)">
             @csrf
-            <button type="submit" class="kcard-save" style="width:32px; height:32px; background:{{ $isFavorited ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)' }}; backdrop-filter:blur(4px); border-radius:50%; display:flex; align-items:center; justify-content:center; color:{{ $isFavorited ? 'var(--terracotta)' : '#fff' }}; border:none; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.9)'; this.style.color='var(--terracotta)';" onmouseout="this.style.background='{{ $isFavorited ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)' }}'; this.style.color='{{ $isFavorited ? 'var(--terracotta)' : '#fff' }}';">♥</button>
+            <button type="submit" class="kcard-save" data-favorited="{{ $isFavorited ? 'true' : 'false' }}" style="width:32px; height:32px; background:{{ $isFavorited ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)' }}; backdrop-filter:blur(4px); border-radius:50%; display:flex; align-items:center; justify-content:center; color:{{ $isFavorited ? 'var(--terracotta)' : '#fff' }}; border:none; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.9)'; this.style.color='var(--terracotta)';" onmouseout="this.dataset.favorited === 'true' ? (this.style.background='rgba(255,255,255,0.9)', this.style.color='var(--terracotta)') : (this.style.background='rgba(255,255,255,0.2)', this.style.color='#fff');">♥</button>
         </form>
+
+        <script>
+            if (typeof window.handleFavoriteToggle === 'undefined') {
+                window.handleFavoriteToggle = async function(event, form) {
+                    event.preventDefault();
+                    
+                    const btn = form.querySelector('button');
+                    
+                    try {
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value,
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        
+                        if (response.status === 401) {
+                            window.location.href = '/login';
+                            return;
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            btn.dataset.favorited = data.is_favorited ? 'true' : 'false';
+                            if (data.is_favorited) {
+                                btn.style.background = 'rgba(255,255,255,0.9)';
+                                btn.style.color = 'var(--terracotta)';
+                            } else {
+                                btn.style.background = 'rgba(255,255,255,0.2)';
+                                btn.style.color = '#fff';
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error toggling favorite:', error);
+                    }
+                };
+            }
+        </script>
     @endif
   </div>
   

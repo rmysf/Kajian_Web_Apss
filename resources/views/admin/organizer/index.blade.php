@@ -4,13 +4,28 @@
     </x-slot>
 
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-lg font-bold text-brand-ink">Daftar Akun Penyelenggara</h2>
-            <p class="text-sm text-brand-ink-soft">Kelola status verifikasi akun organizer agar mereka bisa membuat kajian publik.</p>
+        <div class="p-6 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4">
+            <div class="min-w-[250px]">
+                <h2 class="text-lg font-bold text-brand-ink">Daftar Akun Penyelenggara</h2>
+                <p class="text-sm text-brand-ink-soft">Kelola status verifikasi akun organizer agar mereka bisa membuat kajian publik.</p>
+            </div>
+            <div class="flex items-center w-full md:w-auto">
+                <form action="{{ route('admin.organizer.index') }}" method="GET" class="relative flex-1 md:flex-none md:w-64">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+                    </div>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari organizer..." class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-emerald-500 focus:border-brand-emerald-500 block w-full pl-9 pr-8 py-2 shadow-sm transition outline-none">
+                    @if(request('search'))
+                        <a href="{{ route('admin.organizer.index') }}" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </a>
+                    @endif
+                </form>
+            </div>
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200">
                         <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider">Nama Organizer</th>
@@ -32,19 +47,10 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <form action="{{ route('admin.organizer.verify', $organizer->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @if($organizer->is_verified)
-                                        <button type="submit" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" title="Cabut Verifikasi">
-                                            <i data-lucide="shield-x" class="w-4 h-4 sm:mr-1.5 text-brand-danger"></i>
-                                            <span class="hidden sm:inline">Cabut Verifikasi</span>
-                                        </button>
-                                    @else
-                                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-brand-emerald-900 hover:bg-brand-emerald-950 transition shadow-sm">
-                                            <i data-lucide="shield-check" class="w-4 h-4 mr-2"></i> Verifikasi Sekarang
-                                        </button>
-                                    @endif
-                                </form>
+                                <a href="{{ route('admin.organizer.show', $organizer->id) }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" title="Detail">
+                                    <i data-lucide="eye" class="w-4 h-4 sm:mr-1.5"></i>
+                                    <span class="hidden sm:inline">Detail</span>
+                                </a>
                             </td>
                         </tr>
                     @empty
@@ -54,6 +60,10 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <div class="px-6 py-4 border-t border-gray-200">
+            {{ $organizers->links() }}
         </div>
     </div>
 </x-admin-layout>

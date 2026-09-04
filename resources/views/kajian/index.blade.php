@@ -20,10 +20,10 @@
         @if(request('lng')) <input type="hidden" name="lng" value="{{ request('lng') }}"> @endif
         @if(request('nearby')) <input type="hidden" name="nearby" value="{{ request('nearby') }}"> @endif
         
-        <div style="display:flex; align-items:center; background:var(--paper); border:1px solid var(--line); border-radius:99px; padding:6px 6px 6px 20px; max-width:600px; margin:0 auto; box-shadow:0 10px 25px rgba(10,43,32,0.05);">
-            <svg style="width:20px; height:20px; color:var(--ink-soft);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <input type="search" name="q" value="{{ request('q') }}" style="flex:1; background:transparent; border:none; outline:none; padding:10px 14px; font-size:15px; color:var(--ink);" placeholder="Cari ustadz, masjid, atau tema...">
-            <button type="submit" class="btn btn-solid" style="padding:10px 24px;">Cari</button>
+        <div style="display:flex; align-items:center; background:var(--paper); border:1px solid var(--line); border-radius:99px; padding:6px 6px 6px 20px; max-width:100%; width:100%; margin:0 auto; box-shadow:0 10px 25px rgba(10,43,32,0.05); overflow:hidden;">
+            <svg style="width:20px; height:20px; color:var(--ink-soft); flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="search" name="q" value="{{ request('q') }}" class="focus:ring-0 focus:outline-none" style="flex:1; min-width:0; background:transparent; border:none; outline:none; padding:10px 14px; font-size:15px; color:var(--ink); box-shadow:none;" placeholder="Cari ustadz, masjid, atau tema...">
+            <button type="submit" class="btn btn-solid" style="padding:10px 24px; flex-shrink: 0;">Cari</button>
         </div>
     </form>
 
@@ -33,6 +33,7 @@
             gap: 10px;
             overflow-x: auto;
             flex-wrap: nowrap;
+            width: 100%;
             scrollbar-width: none;
             -ms-overflow-style: none;
             -webkit-overflow-scrolling: touch;

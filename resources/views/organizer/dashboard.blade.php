@@ -69,52 +69,27 @@
             <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 relative">
                 <div class="flex items-center justify-between mb-8">
                     <h3 class="text-lg font-bold text-gray-900">Statistik Pendaftar</h3>
-                    <div class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-600 flex items-center cursor-pointer hover:bg-gray-50">
-                        Mingguan <i data-lucide="chevron-down" class="w-4 h-4 ml-2 text-gray-400"></i>
-                    </div>
+                    <form id="chartFilterForm" method="GET" action="">
+                        <select name="filter" onchange="document.getElementById('chartFilterForm').submit()" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-600 cursor-pointer hover:bg-gray-50 focus:ring-0 focus:border-gray-200 focus:outline-none bg-white">
+                            <option value="hari" {{ (isset($filter) && $filter == 'hari') ? 'selected' : '' }}>Harian</option>
+                            <option value="minggu" {{ (isset($filter) && $filter == 'minggu') ? 'selected' : '' }}>Mingguan</option>
+                            <option value="bulan" {{ (isset($filter) && $filter == 'bulan') ? 'selected' : '' }}>Bulanan</option>
+                        </select>
+                    </form>
                 </div>
 
                 <div class="flex items-center space-x-6 mb-6">
-                    <button class="text-sm font-bold text-blue-600 border-b-2 border-blue-600 pb-2 flex items-center">
+                    <button id="btnLineChart" class="text-sm font-bold text-blue-600 border-b-2 border-blue-600 pb-2 flex items-center" onclick="updateChartType('line')">
                         <i data-lucide="line-chart" class="w-4 h-4 mr-2"></i> Line Chart
                     </button>
-                    <button class="text-sm font-medium text-gray-400 pb-2 flex items-center hover:text-gray-600">
+                    <button id="btnBarChart" class="text-sm font-medium text-gray-400 pb-2 flex items-center hover:text-gray-600 border-b-2 border-transparent" onclick="updateChartType('bar')">
                         <i data-lucide="bar-chart" class="w-4 h-4 mr-2"></i> Bar Chart
                     </button>
                 </div>
 
-                <!-- Chart Mockup (Matching Masjidhero style) -->
+                <!-- Dynamic Chart Container -->
                 <div class="w-full h-64 relative mt-4">
-                    <!-- Grid Lines -->
-                    <div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                        <div class="border-b border-gray-50 w-full flex items-end pb-1"><span class="text-xs text-gray-400 w-12">500</span></div>
-                        <div class="border-b border-gray-50 w-full flex items-end pb-1"><span class="text-xs text-gray-400 w-12">400</span></div>
-                        <div class="border-b border-gray-50 w-full flex items-end pb-1"><span class="text-xs text-gray-400 w-12">300</span></div>
-                        <div class="border-b border-gray-50 w-full flex items-end pb-1"><span class="text-xs text-gray-400 w-12">200</span></div>
-                        <div class="border-b border-gray-50 w-full flex items-end pb-1"><span class="text-xs text-gray-400 w-12">0</span></div>
-                    </div>
-                    
-                    <div class="ml-12 h-full relative">
-                        <svg viewBox="0 0 800 200" class="w-full h-full" preserveAspectRatio="none">
-                            <path d="M0,150 Q50,120 100,140 T200,90 T300,100 T400,60 T500,80 T600,60 T700,40 T800,20" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
-                            <path d="M0,150 Q50,120 100,140 T200,90 T300,100 T400,60 T500,80 T600,60 T700,40 T800,20 L800,200 L0,200 Z" fill="url(#gradEmerald)" opacity="0.1"/>
-                            
-                            <defs>
-                                <linearGradient id="gradEmerald" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stop-color="#10b981" />
-                                    <stop offset="100%" stop-color="rgba(16, 185, 129, 0)" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        
-                        <!-- Tooltip Bubble -->
-                        <div class="absolute top-[20%] left-[60%] -translate-x-1/2 bg-white p-4 rounded-xl shadow-xl text-sm border border-gray-100 z-10 w-48">
-                            <div class="flex justify-between items-center mb-1"><span class="text-gray-500">Pendaftar</span><span class="font-bold text-gray-900">450</span></div>
-                            <div class="flex justify-between items-center mb-2"><span class="text-gray-500">Kajian</span><span class="font-bold text-gray-900">12</span></div>
-                            <div class="text-xs text-emerald-500 font-medium">+15% vs Minggu Lalu</div>
-                        </div>
-                        <div class="absolute top-[35%] left-[60%] w-4 h-4 bg-emerald-500 border-4 border-white rounded-full z-10 shadow-sm -translate-x-1/2 -translate-y-1/2"></div>
-                    </div>
+                    <canvas id="growthChart" class="w-full h-full"></canvas>
                 </div>
             </div>
 
@@ -169,79 +144,124 @@
             </div>
         </div>
 
-        <!-- Bottom row: Event List Table -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-                <h3 class="text-lg font-bold text-gray-900">Jadwal Kajian (Event List)</h3>
-                
-                <div class="flex items-center space-x-2 text-sm text-gray-500 bg-gray-50 rounded-lg p-1">
-                    <button class="px-4 py-1.5 bg-white text-blue-600 font-medium rounded-md shadow-sm border border-gray-200 flex items-center">
-                        <i data-lucide="calendar" class="w-4 h-4 mr-2"></i> Events
-                    </button>
-                    <button class="px-4 py-1.5 hover:text-gray-700 font-medium rounded-md transition-colors flex items-center">
-                        <i data-lucide="ticket" class="w-4 h-4 mr-2"></i> Pendaftar
-                    </button>
-                    <button class="px-4 py-1.5 hover:text-gray-700 font-medium rounded-md transition-colors flex items-center">
-                        <i data-lucide="map-pin" class="w-4 h-4 mr-2"></i> Lokasi
-                    </button>
-                </div>
-            </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="text-xs font-bold text-gray-400 border-b border-gray-100 uppercase tracking-wider">
-                            <th class="pb-3 font-medium">Nama Kajian</th>
-                            <th class="pb-3 font-medium">Tanggal & Waktu</th>
-                            <th class="pb-3 font-medium">Lokasi</th>
-                            <th class="pb-3 font-medium">Status</th>
-                            <th class="pb-3 font-medium">Kategori</th>
-                            <th class="pb-3 font-medium text-right">Peserta</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-50 text-sm">
-                        <tr>
-                            <td class="py-4 text-gray-900 font-bold">Kajian Tafsir Al-Baqarah</td>
-                            <td class="py-4 text-gray-600 font-medium">Sep 27, 2026 - 08:00 AM</td>
-                            <td class="py-4 text-gray-600 font-medium">Masjid Utama</td>
-                            <td class="py-4"><span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></div> Admin Approved</span></td>
-                            <td class="py-4 text-gray-600 font-medium">Jummah</td>
-                            <td class="py-4 text-gray-900 font-bold text-right">450</td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 text-gray-900 font-bold">Sirah Nabawiyah (Anak)</td>
-                            <td class="py-4 text-gray-600 font-medium">Sep 27, 2026 - 16:00 PM</td>
-                            <td class="py-4 text-gray-600 font-medium">Kelas A</td>
-                            <td class="py-4"><span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></div> Admin Approved</span></td>
-                            <td class="py-4 text-gray-600 font-medium">Education</td>
-                            <td class="py-4 text-gray-900 font-bold text-right">110</td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 text-gray-900 font-bold">Mabit Remaja Masjid</td>
-                            <td class="py-4 text-gray-600 font-medium">Sep 28, 2026 - 19:30 PM</td>
-                            <td class="py-4 text-gray-600 font-medium">Ruang Pemuda</td>
-                            <td class="py-4"><span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></div> Scheduled</span></td>
-                            <td class="py-4 text-gray-600 font-medium">Youth</td>
-                            <td class="py-4 text-gray-900 font-bold text-right">218</td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 text-gray-900 font-bold">Kerja Bakti Bersama</td>
-                            <td class="py-4 text-gray-600 font-medium">Oct 01, 2026 - 06:00 AM</td>
-                            <td class="py-4 text-gray-600 font-medium">Area Parkir</td>
-                            <td class="py-4"><span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></div> Draft</span></td>
-                            <td class="py-4 text-gray-600 font-medium">Service</td>
-                            <td class="py-4 text-gray-900 font-bold text-right">108</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="mt-4 flex justify-end">
-                <button class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-indigo-700 transition-colors">
-                    <i data-lucide="plus" class="w-5 h-5"></i>
-                </button>
-            </div>
-        </div>
 
     </div>
+
+
+    <!-- Chart.js Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!document.getElementById('growthChart')) return;
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            
+            // Create gradient
+            let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(239, 68, 68, 0.5)'); // Red-500
+            gradient.addColorStop(1, 'rgba(239, 68, 68, 0)');
+
+            const labels = {!! json_encode($chartLabels ?? []) !!};
+            const data = {!! json_encode($chartData ?? []) !!};
+
+            window.growthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Pendaftar Baru',
+                        data: data,
+                        borderColor: '#ef4444',
+                        backgroundColor: gradient,
+                        borderWidth: 4,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#ef4444',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#ffffff',
+                            titleColor: '#6b7280',
+                            bodyColor: '#111827',
+                            borderColor: '#f3f4f6',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + ' Pendaftar';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#f3f4f6',
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: '#9ca3af',
+                                font: { size: 12 },
+                                stepSize: 500
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: '#9ca3af',
+                                font: { size: 12 }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        function updateChartType(type) {
+            const chart = window.growthChart;
+            if(!chart) return;
+            chart.config.type = type;
+            
+            if (type === 'bar') {
+                chart.data.datasets[0].backgroundColor = '#ef4444';
+                chart.data.datasets[0].borderWidth = 0;
+            } else {
+                let gradient = chart.ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(239, 68, 68, 0.5)');
+                gradient.addColorStop(1, 'rgba(239, 68, 68, 0)');
+                chart.data.datasets[0].backgroundColor = gradient;
+                chart.data.datasets[0].borderWidth = 4;
+            }
+            chart.update();
+
+            // Toggle active styling on buttons
+            const btnLine = document.getElementById('btnLineChart');
+            const btnBar = document.getElementById('btnBarChart');
+            
+            if (type === 'line') {
+                btnLine.className = "text-sm font-bold text-blue-600 border-b-2 border-blue-600 pb-2 flex items-center";
+                btnBar.className = "text-sm font-medium text-gray-400 pb-2 flex items-center hover:text-gray-600 border-b-2 border-transparent";
+            } else {
+                btnBar.className = "text-sm font-bold text-blue-600 border-b-2 border-blue-600 pb-2 flex items-center";
+                btnLine.className = "text-sm font-medium text-gray-400 pb-2 flex items-center hover:text-gray-600 border-b-2 border-transparent";
+            }
+        }
+    </script>
 </x-organizer-layout>
+

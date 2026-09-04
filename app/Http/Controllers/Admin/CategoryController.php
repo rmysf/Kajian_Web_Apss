@@ -7,10 +7,19 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = \App\Models\Category::all();
-        return view('admin.category.index', compact('categories'));
+        $search = $request->input('search');
+
+        $categories = \App\Models\Category::when($search, function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                      ->orWhere('slug', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+            
+        return view('admin.category.index', compact('categories', 'search'));
     }
 
     public function store(Request $request)
@@ -34,12 +43,12 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return redirect()->route('admin.category.index')->with('success', 'Category updated successfully.');
+        return redirect()->route('admin.category.index')->with('success', 'Kategori berhasil diperbarui.');
     }
 
     public function destroy(\App\Models\Category $category)
     {
         $category->delete();
-        return redirect()->route('admin.category.index')->with('success', 'Category deleted successfully.');
+        return redirect()->route('admin.category.index')->with('success', 'Kategori berhasil dihapus.');
     }
 }

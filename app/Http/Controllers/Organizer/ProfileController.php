@@ -24,6 +24,8 @@ class ProfileController extends Controller
             'phone' => 'nullable|string|max:20',
             'description' => 'nullable|string',
             'address' => 'nullable|string',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 

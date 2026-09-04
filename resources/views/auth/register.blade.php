@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/swup@4"></script>
     
     <style>
         :root {
@@ -110,6 +111,19 @@
             box-shadow: 0 0 0 3px rgba(184,134,59, 0.15) !important;
         }
 
+        .login-input:focus ~ .input-icon { color: var(--jade-900); }
+
+        /* Swup Transition Styles (No Animation) */
+        html.is-animating .transition-fade {
+            opacity: 1;
+            transform: none;
+        }
+        .transition-fade {
+            transition: none;
+            opacity: 1;
+            transform: none;
+        }
+
         .auth-wrapper {
             width: 100%;
             max-width: 520px;
@@ -128,6 +142,23 @@
             z-index: 10;
             border: 1px solid rgba(231,199,126,0.3);
             width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .auth-card::-webkit-scrollbar {
+            width: 8px;
+        }
+        .auth-card::-webkit-scrollbar-track {
+            background: transparent;
+            margin: 16px 0;
+        }
+        .auth-card::-webkit-scrollbar-thumb {
+            background-color: var(--gold-soft);
+            border-radius: 20px;
+        }
+        .auth-card::-webkit-scrollbar-thumb:hover {
+            background-color: var(--gold);
         }
         
         @media (max-width: 576px) {
@@ -143,7 +174,8 @@
 </head>
 <body>
 
-<header class="hero" style="position: relative; height: 100vh; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px 0; background: radial-gradient(900px 500px at 82% -10%, rgba(184,134,59,0.20), transparent 60%), linear-gradient(180deg, #0A2B20 0%, #0C3B2A 55%, #0F5137 100%); width: 100%;">
+<main id="swup" class="transition-fade">
+<header class="hero" style="position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 0; background: radial-gradient(900px 500px at 82% -10%, rgba(184,134,59,0.20), transparent 60%), linear-gradient(180deg, #0A2B20 0%, #0C3B2A 55%, #0F5137 100%); width: 100%;">
   <svg class="hero-lattice" viewBox="0 0 1180 700" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0; opacity: 0.16; pointer-events: none; width: 100%; height: 100%;">
     <defs>
       <pattern id="star8" width="86" height="86" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
@@ -191,8 +223,8 @@
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                     <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" placeholder="Fulan bin Fulan" class="login-input" style="width:100%; padding:12px 18px 12px 42px; border-radius:14px; border:1px solid var(--line); background:var(--paper); color:var(--ink); font-family:inherit; font-size:14px; outline:none; transition:all 0.2s;">
-                    <x-input-error :messages="$errors->get('name')" style="margin-top:4px; color:#dc2626; font-size:12px;" />
                 </div>
+                <x-input-error :messages="$errors->get('name')" style="margin-top:0px; color:#dc2626; font-size:12px;" />
             </div>
 
             <!-- Email Address -->
@@ -203,9 +235,10 @@
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                         <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="username" placeholder="nama@email.com" class="login-input" style="width:100%; padding:12px 18px 12px 42px; border-radius:14px; border:1px solid var(--line); background:var(--paper); color:var(--ink); font-family:inherit; font-size:14px; outline:none; transition:all 0.2s;">
-                    <x-input-error :messages="$errors->get('email')" style="margin-top:4px; color:#dc2626; font-size:12px;" />
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="username" placeholder="nama@email.com" class="login-input" style="width:100%; padding:12px 18px 12px 42px; border-radius:14px; border:1px solid var(--line); background:var(--paper); color:var(--ink); font-family:inherit; font-size:14px; outline:none; transition:all 0.2s;" oninvalid="showEmailWarning(event)" oninput="hideEmailWarning()">
                 </div>
+                <span id="email-warning" style="display:none; margin-top:0px; color:#dc2626; font-size:12px;">Format email tidak valid (harus mengandung @ dan domain).</span>
+                <x-input-error :messages="$errors->get('email')" style="margin-top:0px; color:#dc2626; font-size:12px;" />
             </div>
 
             <!-- Password -->
@@ -223,8 +256,8 @@
                             <circle cx="12" cy="12" r="3"></circle>
                         </svg>
                     </button>
-                    <x-input-error :messages="$errors->get('password')" style="margin-top:4px; color:#dc2626; font-size:12px;" />
                 </div>
+                <x-input-error :messages="$errors->get('password')" style="margin-top:0px; color:#dc2626; font-size:12px;" />
             </div>
 
             <!-- Confirm Password -->
@@ -242,8 +275,8 @@
                             <circle cx="12" cy="12" r="3"></circle>
                         </svg>
                     </button>
-                    <x-input-error :messages="$errors->get('password_confirmation')" style="margin-top:4px; color:#dc2626; font-size:12px;" />
                 </div>
+                <x-input-error :messages="$errors->get('password_confirmation')" style="margin-top:0px; color:#dc2626; font-size:12px;" />
             </div>
 
             <div style="margin-top:8px;">
@@ -261,21 +294,35 @@
 
 
 
-  </div>
+    </div>
 </header>
-
-</body>
 <script>
-function togglePassword(inputId, iconId) {
-    var input = document.getElementById(inputId);
-    var icon = document.getElementById(iconId);
-    if (input.type === 'password') {
-        input.type = 'text';
-        icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
-    } else {
-        input.type = 'password';
-        icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+    const swup = new Swup();
+    function togglePassword(inputId, iconId) {
+        var input = document.getElementById(inputId);
+        var icon = document.getElementById(iconId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+        } else {
+            input.type = 'password';
+            icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+        }
     }
-}
+
+    function showEmailWarning(e) {
+        e.preventDefault(); // Mencegah popup browser bawaan
+        document.getElementById('email-warning').style.display = 'block';
+        document.getElementById('email').style.borderColor = '#dc2626';
+        document.getElementById('email-wrapper').style.marginBottom = '4px';
+    }
+
+    function hideEmailWarning() {
+        document.getElementById('email-warning').style.display = 'none';
+        document.getElementById('email').style.borderColor = 'var(--line)';
+        document.getElementById('email-wrapper').style.marginBottom = '6px';
+    }
 </script>
+</main>
+</body>
 </html>

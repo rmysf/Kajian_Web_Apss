@@ -12,18 +12,29 @@ use Illuminate\Support\Str;
 
 class KajianController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('search');
         $organizerId = auth()->user()->organizer->id;
-        $kajians = Kajian::where('organizer_id', $organizerId)->latest()->get();
-        return view('organizer.kajian.index', compact('kajians'));
+        
+        $kajians = Kajian::where('organizer_id', $organizerId)
+            ->when($search, function ($query) use ($search) {
+                $query->where('title', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+            
+        return view('organizer.kajian.index', compact('kajians', 'search'));
     }
 
     public function create()
     {
         $organizerId = auth()->user()->organizer->id;
         $categories = Category::all();
-        $mosques = Mosque::where('organizer_id', $organizerId)->get();
+        $mosques = Mosque::where('organizer_id', $organizerId)
+                         ->orWhereNull('organizer_id')
+                         ->get();
         $speakers = Speaker::all();
         return view('organizer.kajian.create', compact('categories', 'mosques', 'speakers'));
     }
@@ -32,7 +43,8 @@ class KajianController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'mosque_id' => 'required|exists:mosques,id',
+            'mosque_id' => 'nullable|exists:mosques,id',
+            'custom_mosque_name' => 'nullable|string|max:255|required_without:mosque_id',
             'speaker_id' => 'required|exists:speakers,id',
             'category_id' => 'required|exists:categories,id',
             'tanggal' => 'required|date',
@@ -52,6 +64,17 @@ class KajianController extends Controller
         ]);
 
         $organizerId = auth()->user()->organizer->id;
+
+        if (empty($validated['mosque_id']) && !empty($validated['custom_mosque_name'])) {
+            $newMosque = Mosque::create([
+                'organizer_id' => $organizerId,
+                'name' => $validated['custom_mosque_name'],
+                'address' => $validated['address'],
+                'latitude' => $validated['latitude'],
+                'longitude' => $validated['longitude'],
+            ]);
+            $validated['mosque_id'] = $newMosque->id;
+        }
 
         $data = array_merge($validated, [
             'organizer_id' => $organizerId,
@@ -86,7 +109,9 @@ class KajianController extends Controller
         if ($kajian->organizer_id !== $organizerId) abort(403);
 
         $categories = Category::all();
-        $mosques = Mosque::where('organizer_id', $organizerId)->get();
+        $mosques = Mosque::where('organizer_id', $organizerId)
+                         ->orWhereNull('organizer_id')
+                         ->get();
         $speakers = Speaker::all();
         return view('organizer.kajian.edit', compact('kajian', 'categories', 'mosques', 'speakers'));
     }
@@ -97,7 +122,8 @@ class KajianController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'mosque_id' => 'required|exists:mosques,id',
+            'mosque_id' => 'nullable|exists:mosques,id',
+            'custom_mosque_name' => 'nullable|string|max:255|required_without:mosque_id',
             'speaker_id' => 'required|exists:speakers,id',
             'category_id' => 'required|exists:categories,id',
             'tanggal' => 'required|date',
@@ -115,6 +141,17 @@ class KajianController extends Controller
             'facilities' => 'nullable|array',
             'facilities.*' => 'string'
         ]);
+
+        if (empty($validated['mosque_id']) && !empty($validated['custom_mosque_name'])) {
+            $newMosque = Mosque::create([
+                'organizer_id' => auth()->user()->organizer->id,
+                'name' => $validated['custom_mosque_name'],
+                'address' => $validated['address'],
+                'latitude' => $validated['latitude'],
+                'longitude' => $validated['longitude'],
+            ]);
+            $validated['mosque_id'] = $newMosque->id;
+        }
 
         $data = array_merge($validated, [
             'is_family_friendly' => $request->has('is_family_friendly'),
@@ -143,6 +180,6 @@ class KajianController extends Controller
     {
         if ($kajian->organizer_id !== auth()->user()->organizer->id) abort(403);
         $kajian->delete();
-        return redirect()->route('kajian.index')->with('success', 'Kajian deleted successfully.');
+        return redirect()->route('organizer.kajian.index')->with('success', 'Kajian berhasil dihapus.');
     }
 }

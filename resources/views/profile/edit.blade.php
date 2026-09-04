@@ -94,21 +94,54 @@
                 <!-- Current Password -->
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <label for="update_password_current_password" style="font-size: 13px; font-weight: 700; color: var(--jade-950);">Kata Sandi Saat Ini</label>
-                    <input id="update_password_current_password" name="current_password" type="password" autocomplete="current-password" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font-family: inherit; font-size: 14px; outline: none;">
+                    <div style="position: relative; width: 100%;">
+                        <input id="update_password_current_password" name="current_password" type="password" autocomplete="current-password" style="width: 100%; padding: 12px 48px 12px 16px; border-radius: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font-family: inherit; font-size: 14px; outline: none;">
+                        <button type="button" onclick="togglePassword('update_password_current_password', this)" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; padding: 0; cursor: pointer; color: var(--ink-soft);">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="eye-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="eye-slash-icon" style="display: none;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                            </svg>
+                        </button>
+                    </div>
                     <x-input-error :messages="$errors->updatePassword->get('current_password')" style="color:#dc2626; font-size:12px; margin-top: 4px;" />
                 </div>
 
                 <!-- New Password -->
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <label for="update_password_password" style="font-size: 13px; font-weight: 700; color: var(--jade-950);">Kata Sandi Baru</label>
-                    <input id="update_password_password" name="password" type="password" autocomplete="new-password" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font-family: inherit; font-size: 14px; outline: none;">
+                    <div style="position: relative; width: 100%;">
+                        <input id="update_password_password" name="password" type="password" autocomplete="new-password" style="width: 100%; padding: 12px 48px 12px 16px; border-radius: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font-family: inherit; font-size: 14px; outline: none;">
+                        <button type="button" onclick="togglePassword('update_password_password', this)" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; padding: 0; cursor: pointer; color: var(--ink-soft);">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="eye-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="eye-slash-icon" style="display: none;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                            </svg>
+                        </button>
+                    </div>
                     <x-input-error :messages="$errors->updatePassword->get('password')" style="color:#dc2626; font-size:12px; margin-top: 4px;" />
                 </div>
 
                 <!-- Confirm Password -->
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <label for="update_password_password_confirmation" style="font-size: 13px; font-weight: 700; color: var(--jade-950);">Konfirmasi Kata Sandi</label>
-                    <input id="update_password_password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font-family: inherit; font-size: 14px; outline: none;">
+                    <div style="position: relative; width: 100%;">
+                        <input id="update_password_password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" style="width: 100%; padding: 12px 48px 12px 16px; border-radius: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font-family: inherit; font-size: 14px; outline: none;">
+                        <button type="button" onclick="togglePassword('update_password_password_confirmation', this)" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; padding: 0; cursor: pointer; color: var(--ink-soft);">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="eye-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="eye-slash-icon" style="display: none;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                            </svg>
+                        </button>
+                    </div>
                     <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" style="color:#dc2626; font-size:12px; margin-top: 4px;" />
                 </div>
 
@@ -149,7 +182,18 @@
 
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <label for="password" style="font-size: 13px; font-weight: 700; color: var(--jade-950);">Kata Sandi</label>
-                    <input id="password" name="password" type="password" placeholder="Masukkan sandi Anda" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font-family: inherit; font-size: 14px; outline: none;">
+                    <div style="position: relative; width: 100%;">
+                        <input id="password" name="password" type="password" placeholder="Masukkan sandi Anda" style="width: 100%; padding: 12px 48px 12px 16px; border-radius: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font-family: inherit; font-size: 14px; outline: none;">
+                        <button type="button" onclick="togglePassword('password', this)" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; padding: 0; cursor: pointer; color: var(--ink-soft);">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="eye-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="eye-slash-icon" style="display: none;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                            </svg>
+                        </button>
+                    </div>
                     <x-input-error :messages="$errors->userDeletion->get('password')" style="color:#dc2626; font-size:12px; margin-top: 4px;" />
                 </div>
 
@@ -166,4 +210,22 @@
     </div>
 
 </div>
+
+<script>
+    function togglePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+        const eyeIcon = button.querySelector('.eye-icon');
+        const eyeSlashIcon = button.querySelector('.eye-slash-icon');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            eyeIcon.style.display = 'none';
+            eyeSlashIcon.style.display = 'block';
+        } else {
+            input.type = 'password';
+            eyeIcon.style.display = 'block';
+            eyeSlashIcon.style.display = 'none';
+        }
+    }
+</script>
 @endsection

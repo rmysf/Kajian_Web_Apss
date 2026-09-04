@@ -4,27 +4,37 @@
     </x-slot>
 
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm">
-        <div class="p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-            <div>
-                <h2 class="text-lg font-bold text-brand-ink">Daftar Semua Peserta</h2>
-                <p class="text-sm text-brand-ink-soft">Melihat seluruh jamaah yang mendaftar pada kajian Anda.</p>
+        <div class="p-6 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4">
+            <div class="min-w-[250px]">
+                <h2 class="text-lg font-bold text-brand-ink">Daftar Hadirin & Calon Peserta</h2>
+                <p class="text-sm text-brand-ink-soft">Melihat seluruh jamaah yang sudah hadir maupun calon peserta yang baru mendaftar pada kajian Anda.</p>
             </div>
-            <div class="mt-4 sm:mt-0 flex space-x-2">
-                <button type="button" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-sm font-medium rounded-lg text-brand-ink hover:bg-gray-50 transition">
-                    <i data-lucide="download" class="w-4 h-4 mr-2"></i> Export Data
-                </button>
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <form action="{{ route('organizer.peserta.global') }}" method="GET" class="relative flex-1 md:flex-none md:w-64">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+                    </div>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari peserta atau kajian..." class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-emerald-500 focus:border-brand-emerald-500 block w-full pl-9 pr-8 py-2 shadow-sm transition outline-none">
+                    @if(request('search'))
+                        <a href="{{ route('organizer.peserta.global') }}" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </a>
+                    @endif
+                </form>
+                <a href="{{ route('organizer.peserta.export', ['search' => request('search')]) }}" class="shrink-0 inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-sm font-medium rounded-lg text-brand-ink hover:bg-gray-50 transition shadow-sm whitespace-nowrap">
+                    <i data-lucide="download" class="w-4 h-4 sm:mr-2"></i> <span class="hidden sm:inline">Unduh Data</span><span class="sm:hidden">Unduh</span>
+                </a>
             </div>
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200">
                         <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider">Nama Peserta</th>
                         <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider">Kajian</th>
                         <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider">Waktu Daftar</th>
                         <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -48,20 +58,6 @@
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-emerald-100 text-brand-emerald-950">Hadir</span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Dibatalkan</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                @if($attendee->status === 'registered')
-                                    <!-- Here we can add a check-in form later if needed -->
-                                    <button type="button" class="inline-flex items-center px-3 py-1.5 border border-brand-emerald-900 text-sm font-medium rounded-md text-white bg-brand-emerald-900 hover:bg-brand-emerald-950 transition">
-                                        <i data-lucide="check-circle" class="w-4 h-4 sm:mr-1.5"></i>
-                                        <span class="hidden sm:inline">Check In</span>
-                                    </button>
-                                @else
-                                    <button type="button" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" disabled>
-                                        <i data-lucide="check" class="w-4 h-4 sm:mr-1.5 text-brand-emerald-900"></i>
-                                        <span class="hidden sm:inline">Selesai</span>
-                                    </button>
                                 @endif
                             </td>
                         </tr>

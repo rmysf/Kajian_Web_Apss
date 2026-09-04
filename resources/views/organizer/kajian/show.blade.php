@@ -45,7 +45,23 @@
                     </div>
                     <div class="sm:col-span-1">
                         <dt class="text-sm font-medium text-brand-ink-soft">Audiens</dt>
-                        <dd class="mt-1 text-sm text-brand-ink font-semibold capitalize">{{ $kajian->audience }}</dd>
+                        <dd class="mt-1 text-sm text-brand-ink font-semibold capitalize">{{ $kajian->audience === 'umum' ? 'Umum (Ikhwan & Akhwat)' : $kajian->audience }}</dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-brand-ink-soft">Ramah Keluarga</dt>
+                        <dd class="mt-1 text-sm text-brand-ink font-semibold">{{ $kajian->is_family_friendly ? 'Ya' : 'Tidak' }}</dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-brand-ink-soft">Biaya Tiket</dt>
+                        <dd class="mt-1 text-sm text-brand-ink font-semibold">{{ $kajian->is_free ? 'Gratis' : 'Berbayar' }}</dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-brand-ink-soft">Harga Tiket</dt>
+                        <dd class="mt-1 text-sm text-brand-ink font-semibold">{{ $kajian->is_free || !$kajian->price ? '-' : 'Rp ' . number_format($kajian->price, 0, ',', '.') }}</dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-brand-ink-soft">Kuota Peserta</dt>
+                        <dd class="mt-1 text-sm text-brand-ink font-semibold">{{ $kajian->quota ? $kajian->quota . ' Orang' : 'Tidak Terbatas' }}</dd>
                     </div>
                     <div class="sm:col-span-1">
                         <dt class="text-sm font-medium text-brand-ink-soft">Waktu Mulai</dt>
@@ -55,13 +71,17 @@
                         <dt class="text-sm font-medium text-brand-ink-soft">Waktu Selesai</dt>
                         <dd class="mt-1 text-sm text-brand-ink font-semibold">{{ \Carbon\Carbon::parse($kajian->end_at)->translatedFormat('l, d F Y H:i') }}</dd>
                     </div>
-                    <div class="sm:col-span-2">
+                    <div class="sm:col-span-1">
                         <dt class="text-sm font-medium text-brand-ink-soft">Alamat Lengkap</dt>
                         <dd class="mt-1 text-sm text-brand-ink font-semibold">{{ $kajian->address }}</dd>
                     </div>
-                    <div class="sm:col-span-2">
+                    <div class="sm:col-span-1">
                         <dt class="text-sm font-medium text-brand-ink-soft">Koordinat (Lat, Lng)</dt>
                         <dd class="mt-1 text-sm text-brand-ink font-semibold">{{ $kajian->latitude }}, {{ $kajian->longitude }}</dd>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <dt class="text-sm font-medium text-brand-ink-soft">Deskripsi / Detail Kajian</dt>
+                        <dd class="mt-1 text-sm text-brand-ink font-normal leading-relaxed whitespace-pre-wrap max-h-40 overflow-y-auto pr-2 custom-scrollbar">{{ $kajian->description ?: 'Tidak ada deskripsi.' }}</dd>
                     </div>
                 </dl>
                 

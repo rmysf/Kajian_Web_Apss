@@ -9,7 +9,23 @@
     </x-slot>
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8">
-        <form action="{{ route('admin.mosque.update', $mosque->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.mosque.update', $mosque->id) }}" method="POST" enctype="multipart/form-data" x-data="{
+            imageUrl: '{{ $mosque->photo ? asset('storage/' . $mosque->photo) : '' }}',
+            fileError: null,
+            fileChosen(event) {
+                if (! event.target.files.length) return;
+                let file = event.target.files[0];
+                if (file.size > 2 * 1024 * 1024) {
+                    this.fileError = 'Ukuran file maksimal adalah 2MB. Silakan pilih file yang lebih kecil.';
+                    event.target.value = '';
+                    return;
+                }
+                this.fileError = null;
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = e => this.imageUrl = e.target.result;
+            }
+        }">
             @csrf
             @method('PUT')
             
@@ -31,24 +47,23 @@
                         <!-- Foto Masjid -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Foto Masjid</label>
-                            @if($mosque->photo)
-                                <div class="mb-3">
-                                    <img src="{{ asset('storage/' . $mosque->photo) }}" alt="Foto Masjid" class="h-32 object-cover rounded-lg shadow-sm border border-gray-200">
-                                </div>
-                            @endif
-                            <div class="mt-1 flex justify-center items-center px-6 border-2 border-gray-200 border-dashed rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-colors relative group" style="min-height: 215px;">
-                                <div class="space-y-1 text-center">
-                                    <i data-lucide="image" class="mx-auto h-12 w-12 text-gray-400 group-hover:text-gray-500 mb-3"></i>
+                            <div class="mt-1 flex justify-center items-center px-6 border-2 border-gray-200 border-dashed rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-colors relative group overflow-hidden" style="min-height: 215px;">
+                                <template x-if="imageUrl">
+                                    <img :src="imageUrl" class="absolute inset-0 w-full h-full object-cover" alt="Preview" />
+                                </template>
+                                <div class="space-y-1 text-center relative z-10" :class="imageUrl ? 'bg-white/80 p-4 rounded-lg backdrop-blur-sm' : ''">
+                                    <i data-lucide="image" class="mx-auto h-12 w-12 text-gray-400 group-hover:text-gray-500 mb-3" x-show="!imageUrl"></i>
                                     <div class="flex text-sm text-gray-600 justify-center">
                                         <label for="photo" class="relative cursor-pointer rounded-md font-medium text-[#0A2B20] hover:text-[#0C3B2A] focus-within:outline-none">
-                                            <span class="font-bold">Pilih file</span>
-                                            <input id="photo" name="photo" type="file" class="sr-only" accept="image/*">
+                                            <span class="font-bold" x-text="imageUrl ? 'Ganti file' : 'Pilih file'">Pilih file</span>
+                                            <input id="photo" name="photo" type="file" class="sr-only" accept="image/*" @change="fileChosen">
                                         </label>
-                                        <p class="pl-1">atau drag and drop</p>
+                                        <p class="pl-1" x-show="!imageUrl">atau drag and drop</p>
                                     </div>
-                                    <p class="text-xs text-gray-500 mt-2">Format: JPG, PNG, WEBP. Maks 2MB.</p>
+                                    <p class="text-xs text-gray-500 mt-2" x-show="!imageUrl">Format: JPG, PNG, WEBP. Maks 2MB.</p>
                                 </div>
                             </div>
+                            <p x-show="fileError" x-text="fileError" class="text-red-500 text-xs mt-1" style="display: none;"></p>
                             @error('photo') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -72,20 +87,20 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label for="latitude" class="block text-sm font-medium text-gray-700 mb-1">Latitude <span class="text-red-500">*</span></label>
-                                <input type="text" name="latitude" id="latitude" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('latitude', $mosque->latitude) }}" required>
+                                <input type="text" name="latitude" id="latitude" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('latitude', $mosque->latitude) }}" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.-]/g, '')">
                                 @error('latitude') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label for="longitude" class="block text-sm font-medium text-gray-700 mb-1">Longitude <span class="text-red-500">*</span></label>
-                                <input type="text" name="longitude" id="longitude" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('longitude', $mosque->longitude) }}" required>
+                                <input type="text" name="longitude" id="longitude" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('longitude', $mosque->longitude) }}" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.-]/g, '')">
                                 @error('longitude') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                         </div>
 
                         <!-- Link Google Maps -->
                         <div>
-                            <label for="google_maps_url" class="block text-sm font-medium text-gray-700 mb-1">Link Google Maps (Opsional)</label>
-                            <input type="url" name="google_maps_url" id="google_maps_url" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('google_maps_url', $mosque->google_maps_url) }}">
+                            <label for="google_maps_url" class="block text-sm font-medium text-gray-700 mb-1">Link Google Maps <span class="text-red-500">*</span></label>
+                            <input type="url" name="google_maps_url" id="google_maps_url" class="w-full rounded-md border-gray-200 shadow-sm focus:border-brand-emerald-900 focus:ring focus:ring-brand-emerald-900 focus:ring-opacity-50" value="{{ old('google_maps_url', $mosque->google_maps_url) }}" required>
                             @error('google_maps_url') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>

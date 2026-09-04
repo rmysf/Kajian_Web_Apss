@@ -14,6 +14,16 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Organizer\DashboardController as OrganizerDashboardController;
 use App\Http\Controllers\Organizer\KajianController as OrganizerKajianController;
 
+use App\Http\Controllers\Auth\SocialiteController;
+
+/*
+|--------------------------------------------------------------------------
+| OAuth Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/auth/google', [SocialiteController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [SocialiteController::class, 'callback']);
+
 use App\Http\Controllers\Organizer\ParticipantController as OrganizerParticipantController;
 
 // Admin Controllers
@@ -67,6 +77,7 @@ Route::prefix('organizer')->middleware(['auth', 'role:organizer'])->group(functi
     Route::get('/profile', [App\Http\Controllers\Organizer\ProfileController::class, 'edit'])->name('organizer.profile.edit');
     Route::put('/profile', [App\Http\Controllers\Organizer\ProfileController::class, 'update'])->name('organizer.profile.update');
     Route::get('/peserta', [\App\Http\Controllers\Organizer\ParticipantController::class, 'globalIndex'])->name('organizer.peserta.global');
+    Route::get('/peserta/export', [\App\Http\Controllers\Organizer\ParticipantController::class, 'exportGlobal'])->name('organizer.peserta.export');
 });
 
 /*
@@ -75,7 +86,7 @@ Route::prefix('organizer')->middleware(['auth', 'role:organizer'])->group(functi
 |--------------------------------------------------------------------------
 */
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/', [AdminDashboardController::class, 'index']);
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     
     Route::resource('category', AdminCategoryController::class)->names('admin.category');
     Route::resource('mosque', AdminMosqueController::class)->names('admin.mosque');

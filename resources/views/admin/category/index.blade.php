@@ -31,21 +31,30 @@
         }
     }" class="bg-white border border-gray-200 rounded-xl shadow-sm">
         
-        <div class="p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-            <div>
+        <div class="p-6 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4">
+            <div class="min-w-[250px]">
                 <h2 class="text-lg font-bold text-brand-ink">Daftar Kategori</h2>
                 <p class="text-sm text-brand-ink-soft">Kelola referensi kategori untuk kajian.</p>
             </div>
-            <button type="button" @click="openCreateModal()" class="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 bg-brand-emerald-900 text-white text-sm font-medium rounded-lg hover:bg-brand-emerald-950 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-emerald-900 shadow-sm">
-                <i data-lucide="plus-circle" class="w-4 h-4 mr-2"></i> Tambah Kategori
-            </button>
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <form action="{{ route('admin.category.index') }}" method="GET" class="relative flex-1 md:flex-none md:w-64">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+                    </div>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kategori..." class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-emerald-500 focus:border-brand-emerald-500 block w-full pl-9 pr-8 py-2 shadow-sm transition outline-none">
+                    @if(request('search'))
+                        <a href="{{ route('admin.category.index') }}" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </a>
+                    @endif
+                </form>
+                <button type="button" @click="openCreateModal()" class="shrink-0 inline-flex justify-center items-center px-4 py-2 bg-brand-emerald-900 text-white text-sm font-medium rounded-lg hover:bg-brand-emerald-950 transition shadow-sm whitespace-nowrap">
+                    <i data-lucide="plus-circle" class="w-4 h-4 sm:mr-2"></i> <span class="hidden sm:inline">Tambah Kategori</span><span class="sm:hidden">Tambah</span>
+                </button>
+            </div>
         </div>
 
-        @if(session('success'))
-            <div class="bg-green-50 text-green-800 p-4 border-b border-green-200 text-sm">
-                {{ session('success') }}
-            </div>
-        @endif
+
         @if(session('error'))
             <div class="bg-red-50 text-red-800 p-4 border-b border-red-200 text-sm">
                 {{ session('error') }}
@@ -62,7 +71,7 @@
         @endif
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-200">
                         <th class="px-6 py-4 text-xs font-semibold text-brand-ink-soft uppercase tracking-wider">Nama Kategori</th>
@@ -78,12 +87,12 @@
                             <td class="px-6 py-4 text-right space-x-2">
                                 <button type="button" @click="openEditModal({{ json_encode([
                                     'name' => $category->name,
-                                    'update_url' => route('admin.category.update', $category->slug)
+                                    'update_url' => route('admin.category.update', $category->id)
                                 ]) }})" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" title="Edit">
                                     <i data-lucide="edit" class="w-4 h-4 sm:mr-1.5"></i>
                                     <span class="hidden sm:inline">Edit</span>
                                 </button>
-                                <button type="button" @click="deleteModalOpen = true; deleteFormAction = '{{ route('admin.category.destroy', $category->slug) }}'" class="inline-flex items-center px-3 py-1.5 border border-red-200 text-sm font-medium rounded-md text-red-600 bg-red-50 hover:bg-red-100 transition" title="Hapus">
+                                <button type="button" @click="deleteModalOpen = true; deleteFormAction = '{{ route('admin.category.destroy', $category->id) }}'" class="inline-flex items-center px-3 py-1.5 border border-red-200 text-sm font-medium rounded-md text-red-600 bg-red-50 hover:bg-red-100 transition" title="Hapus">
                                     <i data-lucide="trash-2" class="w-4 h-4 sm:mr-1.5"></i>
                                     <span class="hidden sm:inline">Hapus</span>
                                 </button>
@@ -98,6 +107,10 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        
+        <div class="px-6 py-4 border-t border-gray-200">
+            {{ $categories->links() }}
         </div>
 
         <!-- Create/Edit Modal -->

@@ -9,10 +9,18 @@ use Illuminate\Support\Facades\Storage;
 
 class SpeakerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $speakers = Speaker::all();
-        return view('admin.speaker.index', compact('speakers'));
+        $search = $request->input('search');
+        
+        $speakers = Speaker::when($search, function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+            
+        return view('admin.speaker.index', compact('speakers', 'search'));
     }
 
     public function create()
@@ -35,7 +43,7 @@ class SpeakerController extends Controller
 
         Speaker::create($validated);
 
-        return redirect()->route('admin.speaker.index')->with('success', 'Speaker created successfully.');
+        return redirect()->route('admin.speaker.index')->with('success', 'Data pemateri berhasil ditambahkan.');
     }
 
     public function show(Speaker $speaker)
@@ -67,7 +75,7 @@ class SpeakerController extends Controller
 
         $speaker->update($validated);
 
-        return redirect()->route('admin.speaker.index')->with('success', 'Speaker updated successfully.');
+        return redirect()->route('admin.speaker.index')->with('success', 'Data pemateri berhasil diperbarui.');
     }
 
     public function destroy(Speaker $speaker)
@@ -78,6 +86,6 @@ class SpeakerController extends Controller
         }
 
         $speaker->delete();
-        return redirect()->route('admin.speaker.index')->with('success', 'Speaker deleted successfully.');
+        return redirect()->route('admin.speaker.index')->with('success', 'Data pemateri berhasil dihapus.');
     }
 }

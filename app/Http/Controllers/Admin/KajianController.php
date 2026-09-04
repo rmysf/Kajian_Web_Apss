@@ -9,11 +9,32 @@ use App\Models\Kajian;
 
 class KajianController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Get kajians that are not drafts, ordered by creation date (newest first)
-        $kajians = Kajian::with('organizer')->where('status', '!=', 'draft')->latest()->get();
-        return view('admin.kajian.index', compact('kajians'));
+        $search = $request->input('search');
+
+        // Get kajians that are not drafts and not rejected, ordered by creation date (newest first)
+        $kajians = Kajian::with('organizer')
+            ->whereNotIn('status', ['draft', 'rejected'])
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                      ->orWhereHas('organizer', function ($q2) use ($search) {
+                          $q2->where('name', 'like', "%{$search}%");
+                      });
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+            
+        return view('admin.kajian.index', compact('kajians', 'search'));
+    }
+
+    public function show(Kajian $kajian)
+    {
+        $kajian->load(['category', 'speaker', 'mosque', 'organizer']);
+        return view('admin.kajian.show', compact('kajian'));
     }
 
     public function verify($id)
@@ -30,11 +51,9 @@ class KajianController extends Controller
     {
         $kajian = Kajian::findOrFail($id);
         
-        // For simplicity in MVP, rejecting might mean setting status to cancelled or just deleting it.
-        // Let's set is_verified to false and status to cancelled.
         $kajian->update([
             'is_verified' => false,
-            'status' => 'cancelled'
+            'status' => 'rejected'
         ]);
 
         return redirect()->route('admin.kajian.index')->with('success', 'Kajian berhasil ditolak/dibatalkan.');

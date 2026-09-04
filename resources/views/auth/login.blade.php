@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/swup@4"></script>
     
     <style>
         :root {
@@ -162,10 +163,49 @@
             transition: all 0.2s;
         }
         .btn-outline:hover { background: var(--gold-pale); transform: translateY(-2px); }
+
+        /* Swup Transition Styles (No Animation) */
+        html.is-animating .transition-fade {
+            opacity: 1;
+            transform: none;
+        }
+        .transition-fade {
+            transition: none;
+            opacity: 1;
+            transform: none;
+        }
     </style>
 </head>
 <body>
 
+@if (session('status'))
+    <div id="toast-success" style="position:fixed; top:24px; left:50%; transform:translateX(-50%); background:var(--jade-900); color:var(--parchment); padding:16px 24px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.2); z-index:9999; display:flex; align-items:center; gap:12px; font-size:14px; font-weight:600; animation: slideDown 0.4s ease-out forwards; width:max-content; max-width:90vw; text-align:center;">
+        <svg style="flex-shrink:0" width="24" height="24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span>{{ session('status') }}</span>
+        <button onclick="document.getElementById('toast-success').style.display='none'" style="background:none; border:none; color:inherit; cursor:pointer; margin-left:12px; padding:4px; display:flex; align-items:center; justify-content:center; opacity:0.8; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+    <style>
+        @keyframes slideDown {
+            from { top: -50px; opacity: 0; }
+            to { top: 24px; opacity: 1; }
+        }
+    </style>
+    <script>
+        setTimeout(() => {
+            const toast = document.getElementById('toast-success');
+            if(toast) {
+                toast.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, -20px)';
+                setTimeout(() => toast.remove(), 500);
+            }
+        }, 5000);
+    </script>
+@endif
+
+<main id="swup" class="transition-fade">
 <header class="hero" style="position: relative; height: 100vh; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px 0; background: radial-gradient(900px 500px at 82% -10%, rgba(184,134,59,0.20), transparent 60%), linear-gradient(180deg, #0A2B20 0%, #0C3B2A 55%, #0F5137 100%); width: 100%;">
   <svg class="hero-lattice" viewBox="0 0 1180 700" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0; opacity: 0.16; pointer-events: none; width: 100%; height: 100%;">
     <defs>
@@ -180,8 +220,7 @@
 
   <div class="auth-wrapper" style="width: 100%; max-width: 520px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 10;">
     <div class="auth-card" style="background: #F4EEDC !important; border-radius: 32px; padding: 36px 48px; box-shadow: 0 40px 80px rgba(6,26,19,0.4); position: relative; z-index: 10; border: 1px solid rgba(231,199,126,0.3); max-height: 90vh; overflow-y: auto; width: 100%;">
-            
-            <x-auth-session-status style="margin-bottom: 16px;" :status="session('status')" />
+
 
             <div style="text-align: left; margin-bottom: 16px;">
                 <a href="{{ url('/') }}" style="display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--jade-900); text-transform:uppercase; letter-spacing:1px; text-decoration:none;">
@@ -270,7 +309,7 @@
                     <div style="flex-grow:1; border-top:1px solid var(--line);"></div>
                 </div>
 
-                <button type="button" class="btn-outline" style="background: transparent; color: var(--ink); border: 1px solid var(--gold); border-radius: 14px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                <a href="{{ route('google.login') }}" class="btn-outline" style="background: transparent; color: var(--ink); border: 1px solid var(--gold); border-radius: 14px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration: none;">
                     <svg style="width:18px; height:18px; margin-right:10px;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -278,7 +317,7 @@
                         <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                     </svg>
                     Lanjutkan dengan Google
-                </button>
+                </a>
             </form>
 
             <div style="margin-top:24px; text-align:center; font-size:13px; font-weight:500; color:var(--ink-soft);">
@@ -287,5 +326,9 @@
         </div>
     </div>
 </header>
+</main>
+<script>
+    const swup = new Swup();
+</script>
 </body>
 </html>

@@ -14,6 +14,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Flatpickr (Loaded globally for Turbo compatibility) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -54,10 +58,10 @@
         }
     </style>
 </head>
-<body class="antialiased text-gray-800 bg-[#F8F9FA]" x-data="{ sidebarOpen: false }">
+<body class="antialiased text-gray-800 bg-[#F8F9FA]" x-data="{ sidebarOpen: window.innerWidth >= 1024 }">
     <div class="h-screen overflow-hidden flex w-full">
     <!-- Sidebar -->
-    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-50 w-64 sidebar-bg text-white transition-transform duration-300 ease-in-out lg:translate-x-0 lg:relative flex flex-col h-full shrink-0 overflow-hidden">
+    <aside :class="sidebarOpen ? 'translate-x-0 lg:ml-0' : '-translate-x-full lg:-ml-64'" class="fixed lg:static inset-y-0 left-0 z-50 w-64 sidebar-bg text-white transition-all duration-300 ease-in-out flex flex-col h-full shrink-0 overflow-hidden lg:transform-none">
         
         <!-- Pattern SVG -->
         <svg class="sidebar-pattern" viewBox="0 0 256 1000" preserveAspectRatio="xMidYMid slice">
@@ -123,29 +127,25 @@
         <!-- Topbar -->
         <header class="h-16 px-6 flex items-center justify-between shrink-0 bg-white border-b border-gray-200">
             <div class="flex items-center">
-                <button @click="sidebarOpen = true" class="mr-4 p-2 text-gray-500 rounded-lg lg:hidden hover:bg-gray-100">
+                <button @click="sidebarOpen = !sidebarOpen" class="mr-4 p-2 text-gray-500 rounded-lg hover:bg-gray-100 transition-colors">
                     <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
-                <!-- Location / Center Dropdown (Like Masjidhero) -->
-                <div class="hidden md:flex items-center bg-white border border-gray-200 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50">
-                    <span>Pusat Penyelenggara</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 ml-2 text-gray-400"></i>
-                </div>
             </div>
             
             <div class="flex items-center space-x-4">
-                <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100">
-                    <i data-lucide="bell" class="w-5 h-5"></i>
-                    <span class="absolute top-2 right-2 w-2 h-2 bg-emerald-500 rounded-full border-2 border-white"></span>
-                </button>
+
                 
                 <!-- Profile -->
                 <div class="flex items-center gap-3">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=f3f4f6&color=111827" class="w-9 h-9 rounded-full border border-gray-200">
                     <div class="hidden md:block text-right">
                         <p class="text-sm font-bold text-gray-900 leading-none">{{ Auth::user()->name }}</p>
                         <p class="text-xs text-gray-500 mt-1">Penyelenggara</p>
                     </div>
+                    @if(Auth::user()->organizer && Auth::user()->organizer->logo)
+                        <img src="{{ \Illuminate\Support\Facades\Storage::url(Auth::user()->organizer->logo) }}" class="w-9 h-9 rounded-full border border-gray-200 object-cover">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=f3f4f6&color=111827" class="w-9 h-9 rounded-full border border-gray-200">
+                    @endif
                 </div>
             </div>
         </header>

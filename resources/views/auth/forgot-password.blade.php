@@ -1,12 +1,15 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="view-transition" content="same-origin" />
+    <meta name="layout" content="auth" data-turbo-track="reload">
     <meta name="darkreader-lock">
 
     <title>Lupa Sandi - KajianKu</title>
+    @vite(['resources/js/app.js'])
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -140,7 +143,12 @@
         .btn-solid:hover { background: var(--jade-800); transform: translateY(-2px); }
 
     </style>
+
+    
+    
+
 </head>
+
 <body>
 
 <header class="hero">
@@ -157,9 +165,7 @@
 
   <div class="auth-wrapper">
     <div class="auth-card">
-            
-            <x-auth-session-status style="margin-bottom: 16px; color: var(--jade-800); font-weight: 600; font-size: 14px; text-align: center;" :status="session('status')" />
-
+            <!-- Session Status will be handled by SweetAlert2 -->
             <div style="text-align: left; margin-bottom: 16px;">
                 <a href="{{ route('login') }}" style="display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--jade-900); text-transform:uppercase; letter-spacing:1px; text-decoration:none;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -201,5 +207,35 @@
         </div>
     </div>
 </header>
+
+@if(session('status'))
+    <div id="toast-status" style="position:fixed; top:24px; left:50%; transform:translateX(-50%); background:var(--jade-900); color:var(--parchment); padding:16px 24px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.2); z-index:9999; display:flex; align-items:center; gap:12px; font-size:14px; font-weight:600; animation: slideDownToast 0.4s ease-out forwards; width:max-content; max-width:90vw; text-align:center;">
+        <svg style="flex-shrink:0" width="24" height="24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span>{{ session('status') }}</span>
+        <button onclick="document.getElementById('toast-status').style.display='none'" style="background:none; border:none; color:inherit; cursor:pointer; margin-left:12px; padding:4px; display:flex; align-items:center; justify-content:center; opacity:0.8; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+    
+    <style>
+        @keyframes slideDownToast {
+            from { top: -50px; opacity: 0; }
+            to { top: 24px; opacity: 1; }
+        }
+    </style>
+    <script>
+        setTimeout(() => {
+            const toast = document.getElementById('toast-status');
+            if(toast) {
+                toast.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, -20px)';
+                setTimeout(() => toast.remove(), 500);
+            }
+        }, 5000);
+    </script>
+@endif
+
 </body>
+
 </html>
