@@ -90,6 +90,76 @@ class Kajian extends Model
     }
 
     /**
+     * Get dynamic status based on current time.
+     */
+    public function getDynamicStatusAttribute(): array
+    {
+        if ($this->status === 'cancelled') {
+            return [
+                'label' => 'Dibatalkan',
+                'color' => 'bg-red-100 text-brand-danger',
+                'type' => 'cancelled'
+            ];
+        }
+
+        if ($this->status === 'draft') {
+            return [
+                'label' => 'Draft',
+                'color' => 'bg-gray-100 text-gray-800',
+                'type' => 'draft'
+            ];
+        }
+
+        if ($this->status === 'rejected') {
+            return [
+                'label' => 'Ditolak (Butuh Perbaikan)',
+                'color' => 'bg-red-100 text-red-800',
+                'type' => 'rejected'
+            ];
+        }
+
+        $now = now();
+
+        if ($now > $this->end_at) {
+            return [
+                'label' => 'Selesai',
+                'color' => 'bg-gray-800 text-gray-100',
+                'type' => 'finished'
+            ];
+        }
+
+        if ($now >= $this->start_at && $now <= $this->end_at) {
+            return [
+                'label' => 'Sedang Berlangsung',
+                'color' => 'bg-brand-badge-live text-white',
+                'type' => 'ongoing'
+            ];
+        }
+
+        // $now < $this->start_at
+        $diffInHours = $now->diffInHours($this->start_at);
+
+        if ($diffInHours >= 24) {
+            return [
+                'label' => 'Akan Datang',
+                'color' => 'bg-brand-emerald-100 text-brand-emerald-950',
+                'type' => 'upcoming'
+            ];
+        }
+
+        $diff = $this->start_at->diffForHumans(null, [
+            'parts' => 1,
+            'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE
+        ]);
+        
+        return [
+            'label' => 'Mulai ' . $diff . ' lagi',
+            'color' => 'bg-brand-emerald-100 text-brand-emerald-950',
+            'type' => 'upcoming'
+        ];
+    }
+
+    /**
      * Relasi ke organizer yang menyelenggarakan kajian ini.
      */
     public function organizer(): BelongsTo

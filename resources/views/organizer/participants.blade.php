@@ -36,11 +36,12 @@
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-6 py-4">
                                 <div class="font-medium text-brand-ink">{{ $attendee->user->name }}</div>
-                                <div class="text-sm text-brand-ink-soft mt-1">N/A</div> <!-- Assume gender not stored in User model for now -->
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-brand-ink">{{ $attendee->user->email }}</div>
-                                <div class="text-xs text-brand-ink-soft mt-1">N/A</div> <!-- Assume phone not stored -->
+                                @if($attendee->user->phone)
+                                    <div class="text-xs text-brand-ink-soft mt-1">{{ $attendee->user->phone }}</div>
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-sm text-brand-ink">
                                 {{ $attendee->created_at->format('d M Y H:i') }}

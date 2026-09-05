@@ -30,7 +30,7 @@
                             {{ $kajian->category->name }}
                         </span>
                         <span style="display:inline-block; padding:6px 14px; background:rgba(255,255,255,0.2); backdrop-filter:blur(4px); color:#fff; border:1px solid rgba(255,255,255,0.4); font-size:11px; font-weight:700; border-radius:99px; text-transform:uppercase; letter-spacing:1px;">
-                            {{ $kajian->status_label }}
+                            {{ $kajian->dynamic_status['label'] }}
                         </span>
                     </div>
                     <h1 style="font-family:'Fraunces',serif; font-size:28px; font-weight:700; color:#fff; line-height:1.25; margin:0;">{{ $kajian->title }}</h1>
@@ -209,25 +209,7 @@
                 </div>
             </div>
 
-            <!-- Fasilitas -->
-            @php
-                $facilities = is_string($kajian->facilities) ? json_decode($kajian->facilities, true) : (is_array($kajian->facilities) ? $kajian->facilities : []);
-            @endphp
-            <div style="margin-bottom:40px;">
-                <h3 style="font-family:'Fraunces',serif; font-size:20px; font-weight:700; color:var(--jade-950); margin:0 0 16px;">Fasilitas</h3>
-                <div style="display:flex; flex-wrap:wrap; gap:10px;">
-                    @if(!empty($facilities))
-                        @foreach($facilities as $facility)
-                        <div style="background:var(--paper); border:1px solid var(--line); border-radius:99px; padding:8px 16px; font-size:13px; font-weight:600; color:var(--jade-800); display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 10px rgba(10,43,32,0.03);">
-                            <svg style="width:16px; height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            {{ $facility }}
-                        </div>
-                        @endforeach
-                    @else
-                        <p style="font-size:14px; color:var(--ink-soft);">Belum ada informasi fasilitas.</p>
-                    @endif
-                </div>
-            </div>
+
 
             <!-- Deskripsi -->
             <div style="margin-bottom:40px;">

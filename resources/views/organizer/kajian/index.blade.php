@@ -62,29 +62,17 @@
                                 <div class="text-xs text-brand-ink-soft mt-1">{{ \Carbon\Carbon::parse($kajian->start_at)->format('H:i') }} - {{ \Carbon\Carbon::parse($kajian->end_at)->format('H:i') }}</div>
                             </td>
                             <td class="px-6 py-4">
-                                @if($kajian->status === 'draft')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Draft</span>
-                                @elseif($kajian->status === 'published')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-emerald-100 text-brand-emerald-950">Dipublikasikan</span>
-                                @elseif($kajian->status === 'ongoing')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-badge-live text-white">Berlangsung</span>
-                                @elseif($kajian->status === 'finished')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-800 text-gray-100">Selesai</span>
-                                @elseif($kajian->status === 'cancelled')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-brand-danger">Dibatalkan</span>
-                                @elseif($kajian->status === 'rejected')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Ditolak (Butuh Perbaikan)</span>
-                                @endif
+                                @php
+                                    $status = $kajian->dynamic_status;
+                                @endphp
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $status['color'] }}">{{ $status['label'] }}</span>
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
                                 <a href="{{ route('organizer.kajian.show', $kajian->slug) }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" title="Detail">
                                     <i data-lucide="eye" class="w-4 h-4 sm:mr-1.5"></i>
                                     <span class="hidden sm:inline">Detail</span>
                                 </a>
-                                <a href="{{ route('organizer.kajian.edit', $kajian->slug) }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-brand-ink bg-white hover:bg-gray-50 transition" title="Edit">
-                                    <i data-lucide="edit" class="w-4 h-4 sm:mr-1.5"></i>
-                                    <span class="hidden sm:inline">Edit</span>
-                                </a>
+
                                 <button type="button" @click="openDeleteModal({{ json_encode([
                                     'title' => $kajian->title,
                                     'delete_url' => route('organizer.kajian.destroy', $kajian->slug)

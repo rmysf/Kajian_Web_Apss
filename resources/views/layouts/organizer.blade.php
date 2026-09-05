@@ -46,7 +46,6 @@
             background-color: #0A2B20;
             background-image: radial-gradient(400px 400px at 50% -10%, rgba(184,134,59,.20), transparent 60%),
                               linear-gradient(180deg, #0A2B20 0%, #0C3B2A 55%, #0F5137 100%);
-            position: relative;
         }
         .sidebar-pattern {
             position: absolute;
@@ -58,10 +57,10 @@
         }
     </style>
 </head>
-<body class="antialiased text-gray-800 bg-[#F8F9FA]" x-data="{ sidebarOpen: window.innerWidth >= 1024 }">
+<body class="antialiased text-gray-800 bg-[#F8F9FA]" x-data="{ sidebarOpen: window.innerWidth >= 1024 }" @resize.window="sidebarOpen = window.innerWidth >= 1024">
     <div class="h-screen overflow-hidden flex w-full">
     <!-- Sidebar -->
-    <aside :class="sidebarOpen ? 'translate-x-0 lg:ml-0' : '-translate-x-full lg:-ml-64'" class="fixed lg:static inset-y-0 left-0 z-50 w-64 sidebar-bg text-white transition-all duration-300 ease-in-out flex flex-col h-full shrink-0 overflow-hidden lg:transform-none">
+    <aside :class="sidebarOpen ? 'translate-x-0 lg:ml-0' : '-translate-x-full lg:-ml-64'" class="fixed lg:relative inset-y-0 left-0 z-50 w-64 sidebar-bg text-white transition-all duration-300 ease-in-out flex flex-col h-full shrink-0 overflow-hidden lg:transform-none">
         
         <!-- Pattern SVG -->
         <svg class="sidebar-pattern" viewBox="0 0 256 1000" preserveAspectRatio="xMidYMid slice">
