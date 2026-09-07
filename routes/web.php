@@ -16,11 +16,7 @@ use App\Http\Controllers\Organizer\KajianController as OrganizerKajianController
 
 use App\Http\Controllers\Auth\SocialiteController;
 
-/*
-|--------------------------------------------------------------------------
-| OAuth Routes
-|--------------------------------------------------------------------------
-*/
+// OAuth Routes
 Route::get('/auth/google', [SocialiteController::class, 'redirect'])->name('google.login');
 Route::get('/auth/google/callback', [SocialiteController::class, 'callback']);
 
@@ -36,11 +32,7 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\MosqueController as AdminMosqueController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 
-/*
-|--------------------------------------------------------------------------
-| Public & User Routes
-|--------------------------------------------------------------------------
-*/
+// Public & User Routes
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/kajian', [KajianController::class, 'index'])->name('kajian.index');
@@ -62,11 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Organizer Routes
-|--------------------------------------------------------------------------
-*/
+// Organizer Routes
 Route::prefix('organizer')->middleware(['auth', 'role:organizer'])->group(function () {
     // Profil bisa diakses meskipun belum diverifikasi
     Route::get('/profile', [App\Http\Controllers\Organizer\ProfileController::class, 'edit'])->name('organizer.profile.edit');
@@ -84,11 +72,7 @@ Route::prefix('organizer')->middleware(['auth', 'role:organizer'])->group(functi
     });
 });
 
-/*
-|--------------------------------------------------------------------------
-| Admin Routes
-|--------------------------------------------------------------------------
-*/
+// Admin Routes
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     
