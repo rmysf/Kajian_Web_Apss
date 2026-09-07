@@ -35,6 +35,7 @@
                     <tr>
                         <th scope="col" class="px-6 py-4 font-medium tracking-wider">Nama Masjid</th>
                         <th scope="col" class="px-6 py-4 font-medium tracking-wider">Alamat Lengkap</th>
+                        <th scope="col" class="px-6 py-4 font-medium tracking-wider text-center">Maps</th>
                         <th scope="col" class="px-6 py-4 font-medium tracking-wider text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -46,6 +47,15 @@
                             </td>
                             <td class="px-6 py-5 text-gray-500">
                                 {{ Str::limit($mosque->address, 60) }}
+                            </td>
+                            <td class="px-6 py-5 text-center">
+                                @if($mosque->google_maps_url)
+                                    <a href="{{ $mosque->google_maps_url }}" target="_blank" class="inline-flex text-gray-400 hover:text-brand-emerald-600 transition" title="Buka di Google Maps">
+                                        <i data-lucide="map-pin" class="w-5 h-5"></i>
+                                    </a>
+                                @else
+                                    <span class="text-gray-300">-</span>
+                                @endif
                             </td>
                             <td class="px-6 py-5">
                                 <div class="flex items-center justify-end gap-2">
@@ -63,7 +73,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="px-6 py-8 text-center text-gray-500">
+                            <td colspan="4" class="px-6 py-8 text-center text-gray-500">
                                 <div class="flex flex-col items-center justify-center">
                                     <i data-lucide="map-pin" class="w-8 h-8 text-gray-300 mb-2"></i>
                                     <p>Belum ada data masjid yang ditambahkan.</p>
@@ -77,7 +87,7 @@
 
         @if($mosques->hasPages())
             <div class="p-6 border-t border-gray-100">
-                {{ $mosques->links() }}
+                {{ $mosques->onEachSide(1)->links() }}
             </div>
         @endif
 
@@ -117,7 +127,7 @@
             </div>
             
             <div class="px-6 py-4 border-t border-gray-200">
-                {{ $mosques->links() }}
+                {{ $mosques->onEachSide(1)->links() }}
             </div>
         </div>
     </div>

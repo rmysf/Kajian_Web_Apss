@@ -192,7 +192,7 @@
     <div class="auth-card" style="background: #F4EEDC !important; border-radius: 32px; padding: 36px 48px; box-shadow: 0 40px 80px rgba(6,26,19,0.4); position: relative; z-index: 10; border: 1px solid rgba(231,199,126,0.3); width: 100%;">
         
         <div style="text-align: left; margin-bottom: 12px;">
-            <a href="{{ url('/') }}" style="display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--jade-900); text-transform:uppercase; letter-spacing:1px; transition:transform 0.2s; text-decoration:none;" onmouseover="this.style.transform='translateX(-5px)'" onmouseout="this.style.transform='translateX(0)'">
+            <a href="{{ url('/') }}" data-no-swup style="display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--jade-900); text-transform:uppercase; letter-spacing:1px; transition:transform 0.2s; text-decoration:none;" onmouseover="this.style.transform='translateX(-5px)'" onmouseout="this.style.transform='translateX(0)'">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
@@ -349,8 +349,8 @@
         </form>
 
         <div style="margin-top:20px; text-align:center; font-size:13px; font-weight:500; color:var(--ink-soft);">
-            Sudah punya akun? <a href="{{ route('login') }}" style="font-weight:700; color:var(--jade-900); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--jade-900)'">Masuk di sini</a> &nbsp;|&nbsp; 
-            Ingin mendaftar sebagai jamaah? <a href="{{ route('register') }}" style="font-weight:700; color:var(--jade-900); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--jade-900)'">Klik di sini</a>
+            Sudah punya akun? <a href="{{ route('login') }}" data-no-swup style="font-weight:700; color:var(--jade-900); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--jade-900)'">Masuk di sini</a> &nbsp;|&nbsp; 
+            Ingin mendaftar sebagai jamaah? <a href="{{ route('register') }}" data-no-swup style="font-weight:700; color:var(--jade-900); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--jade-900)'">Klik di sini</a>
         </div>
     </div>
 

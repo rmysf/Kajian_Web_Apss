@@ -30,7 +30,7 @@
     
     <!-- Pagination -->
     <div style="margin-top:50px;">
-        {{ $favorites->links() }}
+        {{ $favorites->onEachSide(1)->links() }}
     </div>
 
 </div>

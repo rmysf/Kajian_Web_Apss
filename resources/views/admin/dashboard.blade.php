@@ -4,7 +4,7 @@
         <!-- Top row: KPI Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             <!-- Card 1 -->
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1">
+            <a href="{{ route('admin.kajian.index') }}" class="block bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1 hover:-translate-y-1 hover:shadow-md hover:border-emerald-200 transition-all duration-200">
                 <p class="text-sm text-gray-500 font-medium mb-1">Total Kajian</p>
                 <div class="flex items-end justify-between mt-4">
                     <h3 class="text-2xl font-bold text-gray-900">{{ $totalKajian ?? 0 }}</h3>
@@ -18,28 +18,28 @@
                 <p class="text-xs text-emerald-500 font-medium flex items-center mt-2">
                     <i data-lucide="arrow-up" class="w-3 h-3 mr-1"></i> +{{ $kajianBulanIni ?? 0 }} <span class="text-gray-400 font-normal ml-1">Bulan Ini</span>
                 </p>
-            </div>
+            </a>
 
             <!-- Card 2 -->
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1">
+            <a href="{{ route('admin.mosque.index') }}" class="block bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1 hover:-translate-y-1 hover:shadow-md hover:border-emerald-200 transition-all duration-200">
                 <p class="text-sm text-gray-500 font-medium mb-1">Total Masjid</p>
                 <div class="flex items-end justify-between mt-4">
                     <h3 class="text-2xl font-bold text-gray-900">{{ $totalMosque ?? 0 }}</h3>
                 </div>
                 <p class="text-xs text-gray-400 font-medium mt-2">Lokasi pelaksanaan kajian</p>
-            </div>
+            </a>
 
             <!-- Card 3 -->
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1">
+            <a href="{{ route('admin.kajian.index') }}" class="block bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1 hover:-translate-y-1 hover:shadow-md hover:border-emerald-200 transition-all duration-200">
                 <p class="text-sm text-gray-500 font-medium mb-1">Kajian Terdekat</p>
                 <div class="flex items-end justify-between mt-4">
                     <h3 class="text-2xl font-bold text-gray-900">{{ $kajian7Hari ?? 0 }}</h3>
                 </div>
                 <p class="text-xs text-gray-400 font-medium mt-2">Dalam 7 Hari Kedepan</p>
-            </div>
+            </a>
 
             <!-- Card 4 -->
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1">
+            <a href="{{ route('admin.user.index') }}" class="block bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1 hover:-translate-y-1 hover:shadow-md hover:border-emerald-200 transition-all duration-200">
                 <p class="text-sm text-gray-500 font-medium mb-1">User Aktif</p>
                 <div class="flex items-end justify-between mt-4">
                     <h3 class="text-2xl font-bold text-gray-900">{{ $totalUser ?? 0 }}</h3>
@@ -52,10 +52,10 @@
                 <p class="text-xs text-emerald-500 font-medium flex items-center mt-2">
                     <i data-lucide="arrow-up" class="w-3 h-3 mr-1"></i> +{{ $userMingguIni ?? 0 }} <span class="text-gray-400 font-normal ml-1">Minggu Ini</span>
                 </p>
-            </div>
+            </a>
 
             <!-- Card 5: Total Organizer -->
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1">
+            <a href="{{ route('admin.organizer.index') }}" class="block bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1 hover:-translate-y-1 hover:shadow-md hover:border-indigo-200 transition-all duration-200">
                 <p class="text-sm text-gray-500 font-medium mb-1">Total Organizer</p>
                 <div class="flex items-end justify-between mt-4">
                     <h3 class="text-2xl font-bold text-gray-900">{{ $totalOrganizer ?? 0 }}</h3>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <p class="text-xs text-indigo-500 font-medium mt-2">Terdaftar di sistem</p>
-            </div>
+            </a>
         </div>
 
         <!-- Middle row: Chart and To-Do List -->
@@ -74,7 +74,7 @@
                 <div class="flex items-center justify-between mb-8">
                     <h3 class="text-lg font-bold text-gray-900">Pertumbuhan Pendaftar Kajian</h3>
                     <form id="chartFilterForm" method="GET" action="{{ route('admin.dashboard') }}">
-                        <select name="filter" onchange="document.getElementById('chartFilterForm').submit()" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-600 cursor-pointer hover:bg-gray-50 focus:ring-0 focus:border-gray-200 focus:outline-none bg-white">
+                        <select name="filter" onchange="document.getElementById('chartFilterForm').submit()" class="pl-3 pr-8 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-600 cursor-pointer hover:bg-gray-50 focus:ring-0 focus:border-gray-200 focus:outline-none bg-white">
                             <option value="hari" {{ $filter == 'hari' ? 'selected' : '' }}>Harian</option>
                             <option value="minggu" {{ $filter == 'minggu' ? 'selected' : '' }}>Mingguan</option>
                             <option value="bulan" {{ $filter == 'bulan' ? 'selected' : '' }}>Bulanan</option>
@@ -100,8 +100,8 @@
             <!-- To-Do & Alerts -->
             <div class="lg:col-span-1 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-lg font-bold text-gray-900">Tugas & Peringatan</h3>
-                    <a href="{{ route('admin.kajian.index') }}" class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100">View All</a>
+                    <h3 class="text-lg font-bold text-gray-900">Verifikasi Organizer</h3>
+                    <a href="{{ route('admin.organizer.index') }}" class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100">Lihat Semua</a>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -114,32 +114,19 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-50 text-sm">
-                            @forelse($pendingKajians as $kajian)
-                            <tr>
-                                <td class="py-4 flex items-center text-gray-700 font-medium">
-                                    <div class="w-2 h-2 rounded-full bg-orange-300 mr-2 border border-orange-400"></div> Menunggu
-                                </td>
-                                <td class="py-4 text-gray-900 font-bold">Review Kajian {{ Str::limit($kajian->title, 15) }}</td>
-                                <td class="py-4"><span class="text-xs font-bold text-orange-500 bg-orange-50 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-orange-500 mr-1.5"></div> Awaiting</span></td>
-                            </tr>
-                            @empty
-                            @endforelse
-                            
-                            @foreach($recentOrganizers as $org)
+                            @forelse($recentOrganizers as $org)
                             <tr>
                                 <td class="py-4 flex items-center text-gray-700 font-medium">
                                     <div class="w-2 h-2 rounded-full bg-blue-300 mr-2 border border-blue-400"></div> Organizer
                                 </td>
                                 <td class="py-4 text-gray-900 font-bold">Verifikasi {{ Str::limit($org->name, 15) }}</td>
-                                <td class="py-4"><span class="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></div> New</span></td>
+                                <td class="py-4"><span class="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></div> Baru</span></td>
                             </tr>
-                            @endforeach
-                            
-                            @if($pendingKajians->isEmpty() && $recentOrganizers->isEmpty())
+                            @empty
                                 <tr>
-                                    <td colspan="3" class="py-4 text-center text-gray-500">Belum ada tugas baru.</td>
+                                    <td colspan="3" class="py-4 text-center text-gray-500">Tidak ada organizer yang menunggu verifikasi.</td>
                                 </tr>
-                            @endif
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

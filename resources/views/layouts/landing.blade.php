@@ -731,6 +731,75 @@
 </main>
 <script>
     const swup = new Swup();
+
+    // Fix for Swup: run homepage geolocation check when visiting the homepage
+    function runHomepageGeolocation() {
+        if (window.location.pathname === '/') {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.has('lat') && !urlParams.has('lng') && !sessionStorage.getItem('location_declined')) {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        window.location.href = `/?lat=${lat}&lng=${lng}`;
+                    }, function(error) {
+                        sessionStorage.setItem('location_declined', 'true');
+                    });
+                }
+            }
+        }
+    }
+
+    // Run on initial load
+    runHomepageGeolocation();
+    
+    // Run after every Swup page transition
+    swup.hooks.on('page:view', () => {
+        runHomepageGeolocation();
+        
+        // Perbarui event listener untuk navigasi aktif karena DOM ditukar oleh Swup
+        if(typeof updateActiveState === 'function') updateActiveState();
+    });
+
+    // Global function for "Terdekat" button (since inline scripts inside <main> are ignored by Swup)
+    window.requestLocation = function(btn) {
+        let originalContent = btn.innerHTML;
+        btn.innerHTML = '<svg style="width:16px; height:16px; animation: spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Memuat...';
+        btn.disabled = true;
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    let lat = position.coords.latitude;
+                    let lng = position.coords.longitude;
+                    let currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.set('nearby', '1');
+                    currentUrl.searchParams.set('lat', lat);
+                    currentUrl.searchParams.set('lng', lng);
+                    // Reload strictly to bypass Swup and force standard load with parameters
+                    window.location.href = currentUrl.toString();
+                }, 
+                function(error) {
+                    let errMsg = 'Gagal mendapatkan lokasi.';
+                    if(error.code === 1) errMsg = 'Akses lokasi ditolak oleh Anda.';
+                    if(error.code === 2) errMsg = 'Posisi lokasi tidak tersedia.';
+                    if(error.code === 3) errMsg = 'Waktu permintaan lokasi habis (timeout).';
+                    alert(errMsg + ' Pastikan izin lokasi aktif pada browser Anda.');
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                }, 
+                {
+                    enableHighAccuracy: false,
+                    timeout: 10000,
+                    maximumAge: 60000
+                }
+            );
+        } else {
+            alert('Browser Anda tidak mendukung Geolocation.');
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+        }
+    };
 </script>
 </body>
 </html>

@@ -68,16 +68,20 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::prefix('organizer')->middleware(['auth', 'role:organizer'])->group(function () {
-    Route::get('/', [OrganizerDashboardController::class, 'index']);
-    
-    Route::resource('kajian', OrganizerKajianController::class)->names('organizer.kajian');
-    Route::get('/kajian/{kajian}/peserta', [OrganizerParticipantController::class, 'index']);
-    
-    
+    // Profil bisa diakses meskipun belum diverifikasi
     Route::get('/profile', [App\Http\Controllers\Organizer\ProfileController::class, 'edit'])->name('organizer.profile.edit');
     Route::put('/profile', [App\Http\Controllers\Organizer\ProfileController::class, 'update'])->name('organizer.profile.update');
-    Route::get('/peserta', [\App\Http\Controllers\Organizer\ParticipantController::class, 'globalIndex'])->name('organizer.peserta.global');
-    Route::get('/peserta/export', [\App\Http\Controllers\Organizer\ParticipantController::class, 'exportGlobal'])->name('organizer.peserta.export');
+
+    // Fitur lainnya wajib diverifikasi
+    Route::middleware('verified.organizer')->group(function () {
+        Route::get('/', [OrganizerDashboardController::class, 'index'])->name('organizer.dashboard');
+        
+        Route::resource('kajian', OrganizerKajianController::class)->names('organizer.kajian');
+        Route::get('/kajian/{kajian}/peserta', [OrganizerParticipantController::class, 'index'])->name('organizer.kajian.peserta');
+        
+        Route::get('/peserta', [\App\Http\Controllers\Organizer\ParticipantController::class, 'globalIndex'])->name('organizer.peserta.global');
+        Route::get('/peserta/export', [\App\Http\Controllers\Organizer\ParticipantController::class, 'exportGlobal'])->name('organizer.peserta.export');
+    });
 });
 
 /*

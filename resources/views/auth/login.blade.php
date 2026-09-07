@@ -223,7 +223,7 @@
 
 
             <div style="text-align: left; margin-bottom: 16px;">
-                <a href="{{ url('/') }}" style="display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--jade-900); text-transform:uppercase; letter-spacing:1px; text-decoration:none;">
+                <a href="{{ url('/') }}" data-no-swup style="display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--jade-900); text-transform:uppercase; letter-spacing:1px; text-decoration:none;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 12H5M12 19l-7-7 7-7"/>
                     </svg>
@@ -262,7 +262,7 @@
                     <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
                         <label for="password" style="font-size:13px; font-weight:700; color:var(--jade-950);">Kata Sandi</label>
                         @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" style="font-size:12px; font-weight:600; color:var(--gold); text-decoration:none;">Lupa sandi?</a>
+                            <a href="{{ route('password.request') }}" data-no-swup style="font-size:12px; font-weight:600; color:var(--gold); text-decoration:none;">Lupa sandi?</a>
                         @endif
                     </div>
                     <div style="position:relative;">
@@ -309,7 +309,7 @@
                     <div style="flex-grow:1; border-top:1px solid var(--line);"></div>
                 </div>
 
-                <a href="{{ route('google.login') }}" class="btn-outline" style="background: transparent; color: var(--ink); border: 1px solid var(--gold); border-radius: 14px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration: none;">
+                <a href="{{ route('google.login') }}" data-no-swup class="btn-outline" style="background: transparent; color: var(--ink); border: 1px solid var(--gold); border-radius: 14px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; text-decoration: none;">
                     <svg style="width:18px; height:18px; margin-right:10px;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -321,7 +321,7 @@
             </form>
 
             <div style="margin-top:24px; text-align:center; font-size:13px; font-weight:500; color:var(--ink-soft);">
-                Belum punya akun? <a href="{{ route('register') }}" style="font-weight:700; color:var(--jade-900); text-decoration:none;">Daftar sekarang</a>
+                Belum punya akun? <a href="{{ route('register') }}" data-no-swup style="font-weight:700; color:var(--jade-900); text-decoration:none;">Daftar sekarang</a>
             </div>
         </div>
     </div>
