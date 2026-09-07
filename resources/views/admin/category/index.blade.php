@@ -110,7 +110,7 @@
         </div>
         
         <div class="px-6 py-4 border-t border-gray-200">
-            {{ $categories->links() }}
+            {{ $categories->onEachSide(1)->links() }}
         </div>
 
         <!-- Create/Edit Modal -->

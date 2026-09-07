@@ -134,10 +134,10 @@
                 svgClone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
             }
             
-            // Set ukuran SVG ke 1024x1024 untuk hasil PNG beresolusi tinggi
-            const size = 1024;
-            svgClone.setAttribute("width", size);
-            svgClone.setAttribute("height", size);
+            // Set ukuran SVG ke 600x600 
+            const qrSize = 600;
+            svgClone.setAttribute("width", qrSize);
+            svgClone.setAttribute("height", qrSize);
             
             const svgData = new XMLSerializer().serializeToString(svgClone);
             const blob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
@@ -146,17 +146,75 @@
             const img = new Image();
             img.onload = function() {
                 const canvas = document.createElement("canvas");
-                canvas.width = size;
-                canvas.height = size;
+                // Ukuran poster: 1080 x 1080 (Square 1:1)
+                const cWidth = 1080;
+                const cHeight = 1080;
+                canvas.width = cWidth;
+                canvas.height = cHeight;
                 const ctx = canvas.getContext("2d");
                 
-                // Tambahkan background putih (karena SVG mungkin transparan)
+                // 1. Background (Warna hijau gelap)
+                ctx.fillStyle = "#064e3b"; // Emerald 900
+                ctx.fillRect(0, 0, cWidth, cHeight);
+
+                // Tambahkan aksen pattern/garis di background
+                ctx.strokeStyle = "#022c22"; // Emerald 950
+                ctx.lineWidth = 20;
+                ctx.strokeRect(40, 40, cWidth - 80, cHeight - 80);
+                
+                // 2. Header Text
+                ctx.textAlign = "center";
+                
+                // Judul Presensi
+                ctx.font = "bold 56px system-ui, -apple-system, sans-serif";
                 ctx.fillStyle = "#ffffff";
-                ctx.fillRect(0, 0, size, size);
+                ctx.fillText("PRESENSI KAJIAN", cWidth / 2, 140);
                 
-                // Gambar SVG ke atas canvas
-                ctx.drawImage(img, 0, 0, size, size);
+                // Judul Kajian (Truncate if too long)
+                let title = "{!! addslashes($kajian->title) !!}";
+                ctx.font = "bold 36px system-ui, -apple-system, sans-serif";
+                ctx.fillStyle = "#a7f3d0"; // Emerald 200
+                if(title.length > 45) title = title.substring(0, 42) + '...';
+                ctx.fillText(title, cWidth / 2, 210);
+
+                // 3. Kotak QR Code
+                const boxSize = 680; // Ukuran kotak putih
+                const boxX = (cWidth - boxSize) / 2;
+                const boxY = 280;
                 
+                // Gambar shadow
+                ctx.shadowColor = "rgba(0,0,0,0.3)";
+                ctx.shadowBlur = 20;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 10;
+                
+                // Background QR (Putih) dengan border radius
+                ctx.fillStyle = "#ffffff";
+                ctx.beginPath();
+                if (ctx.roundRect) {
+                    ctx.roundRect(boxX, boxY, boxSize, boxSize, 24);
+                } else {
+                    ctx.rect(boxX, boxY, boxSize, boxSize); // Fallback
+                }
+                ctx.fill();
+                
+                // Reset shadow
+                ctx.shadowColor = "transparent";
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+
+                // 4. Gambar SVG (QR Code)
+                // Posisikan QR di tengah kotak putih
+                const qrPadding = 40;
+                const qrActualSize = boxSize - (qrPadding * 2);
+                ctx.drawImage(img, boxX + qrPadding, boxY + qrPadding, qrActualSize, qrActualSize);
+                
+                // 5. Footer Text
+                ctx.font = "28px system-ui, -apple-system, sans-serif";
+                ctx.fillStyle = "#ffffff";
+                ctx.fillText("Scan QR code ini untuk mencatat kehadiran Anda", cWidth / 2, 1030);
+
                 // Download hasil render sebagai PNG
                 const pngUrl = canvas.toDataURL("image/png");
                 const link = document.createElement("a");

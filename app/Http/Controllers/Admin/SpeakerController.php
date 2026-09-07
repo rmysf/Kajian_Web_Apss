@@ -34,6 +34,12 @@ class SpeakerController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'photo.mimes' => 'Format foto harus berupa: jpeg, png, jpg, atau gif.',
+            'photo.image' => 'File yang diunggah harus berupa gambar.',
+            'photo.max' => 'Ukuran foto maksimal adalah 2MB.',
+            'name.required' => 'Nama pemateri wajib diisi.',
+            'name.max' => 'Nama pemateri maksimal 255 karakter.',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -62,6 +68,12 @@ class SpeakerController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'photo.mimes' => 'Format foto harus berupa: jpeg, png, jpg, atau gif.',
+            'photo.image' => 'File yang diunggah harus berupa gambar.',
+            'photo.max' => 'Ukuran foto maksimal adalah 2MB.',
+            'name.required' => 'Nama pemateri wajib diisi.',
+            'name.max' => 'Nama pemateri maksimal 255 karakter.',
         ]);
 
         if ($request->hasFile('photo')) {

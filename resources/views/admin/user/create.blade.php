@@ -52,10 +52,16 @@
                         </div>
 
                         <!-- Password -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" x-data="{ showPassword: false, showPasswordConfirmation: false }">
                             <div>
                                 <label for="password" class="block text-sm font-bold text-brand-ink mb-1">Kata Sandi <span class="text-red-500">*</span></label>
-                                <input type="password" name="password" id="password" class="w-full rounded-lg border-gray-300 focus:border-brand-emerald-500 focus:ring-brand-emerald-500 shadow-sm" required placeholder="Minimal 8 karakter">
+                                <div class="relative">
+                                    <input :type="showPassword ? 'text' : 'password'" name="password" id="password" class="w-full rounded-lg border-gray-300 focus:border-brand-emerald-500 focus:ring-brand-emerald-500 shadow-sm pr-10" required placeholder="Minimal 8 karakter">
+                                    <button type="button" @click="showPassword = !showPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                                        <i data-lucide="eye" class="w-5 h-5" x-show="!showPassword"></i>
+                                        <i data-lucide="eye-off" class="w-5 h-5" x-show="showPassword" x-cloak></i>
+                                    </button>
+                                </div>
                                 @error('password')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -63,7 +69,13 @@
                             
                             <div>
                                 <label for="password_confirmation" class="block text-sm font-bold text-brand-ink mb-1">Konfirmasi Kata Sandi <span class="text-red-500">*</span></label>
-                                <input type="password" name="password_confirmation" id="password_confirmation" class="w-full rounded-lg border-gray-300 focus:border-brand-emerald-500 focus:ring-brand-emerald-500 shadow-sm" required placeholder="Ketik ulang kata sandi">
+                                <div class="relative">
+                                    <input :type="showPasswordConfirmation ? 'text' : 'password'" name="password_confirmation" id="password_confirmation" class="w-full rounded-lg border-gray-300 focus:border-brand-emerald-500 focus:ring-brand-emerald-500 shadow-sm pr-10" required placeholder="Ketik ulang kata sandi">
+                                    <button type="button" @click="showPasswordConfirmation = !showPasswordConfirmation" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                                        <i data-lucide="eye" class="w-5 h-5" x-show="!showPasswordConfirmation"></i>
+                                        <i data-lucide="eye-off" class="w-5 h-5" x-show="showPasswordConfirmation" x-cloak></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -97,7 +97,7 @@
         </div>
         
         <div class="px-6 py-4 border-t border-gray-200">
-            {{ $kajians->links() }}
+            {{ $kajians->onEachSide(1)->links() }}
         </div>
 
         <!-- Delete Confirmation Modal -->

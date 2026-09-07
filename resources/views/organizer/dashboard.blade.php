@@ -4,7 +4,7 @@
         <!-- Top row: KPI Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             <!-- Card 1 -->
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1">
+            <a href="{{ route('organizer.peserta.global') }}" class="block bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1 hover:-translate-y-1 hover:shadow-md hover:border-emerald-200 transition-all duration-200">
                 <p class="text-sm text-gray-500 font-medium mb-1">Total Pendaftar</p>
                 <div class="flex items-end justify-between mt-4">
                     <h3 class="text-2xl font-bold text-gray-900">{{ $calonPeserta ?? 450 }}</h3>
@@ -17,28 +17,28 @@
                 <p class="text-xs text-emerald-500 font-medium flex items-center mt-2">
                     <i data-lucide="arrow-up" class="w-3 h-3 mr-1"></i> 12.5% <span class="text-gray-400 font-normal ml-1">Bulan Ini</span>
                 </p>
-            </div>
+            </a>
 
             <!-- Card 2 -->
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1">
+            <a href="{{ route('organizer.kajian.index') }}" class="block bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1 hover:-translate-y-1 hover:shadow-md hover:border-emerald-200 transition-all duration-200">
                 <p class="text-sm text-gray-500 font-medium mb-1">Kajian Aktif</p>
                 <div class="flex items-end justify-between mt-4">
                     <h3 class="text-2xl font-bold text-gray-900">{{ $kajianAktif ?? 12 }}</h3>
                 </div>
                 <p class="text-xs text-gray-400 font-medium mt-2">Tafsir, Fiqih, Sejarah</p>
-            </div>
+            </a>
 
             <!-- Card 3 -->
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1">
+            <a href="{{ route('organizer.peserta.global') }}" class="block bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1 hover:-translate-y-1 hover:shadow-md hover:border-emerald-200 transition-all duration-200">
                 <p class="text-sm text-gray-500 font-medium mb-1">Total Hadir</p>
                 <div class="flex items-end justify-between mt-4">
                     <h3 class="text-2xl font-bold text-gray-900">{{ $pesertaHadir ?? '2,100' }}</h3>
                 </div>
-                <p class="text-xs text-gray-400 font-medium mt-2">All-time record</p>
-            </div>
+                <p class="text-xs text-gray-400 font-medium mt-2">Sepanjang waktu</p>
+            </a>
 
             <!-- Card 4 -->
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1">
+            <a href="{{ route('organizer.kajian.index') }}" class="block bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1 hover:-translate-y-1 hover:shadow-md hover:border-emerald-200 transition-all duration-200">
                 <p class="text-sm text-gray-500 font-medium mb-1">Kajian Selesai</p>
                 <div class="flex items-end justify-between mt-4">
                     <h3 class="text-2xl font-bold text-gray-900">45</h3>
@@ -51,7 +51,7 @@
                 <p class="text-xs text-emerald-500 font-medium flex items-center mt-2">
                     <i data-lucide="arrow-up" class="w-3 h-3 mr-1"></i> 5 <span class="text-gray-400 font-normal ml-1">Bulan Ini</span>
                 </p>
-            </div>
+            </a>
 
             <!-- Card 5: System Status / Jam -->
             <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm col-span-1 flex flex-col justify-center text-center">
@@ -70,7 +70,7 @@
                 <div class="flex items-center justify-between mb-8">
                     <h3 class="text-lg font-bold text-gray-900">Statistik Pendaftar</h3>
                     <form id="chartFilterForm" method="GET" action="">
-                        <select name="filter" onchange="document.getElementById('chartFilterForm').submit()" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-600 cursor-pointer hover:bg-gray-50 focus:ring-0 focus:border-gray-200 focus:outline-none bg-white">
+                        <select name="filter" onchange="document.getElementById('chartFilterForm').submit()" class="pl-3 pr-8 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-600 cursor-pointer hover:bg-gray-50 focus:ring-0 focus:border-gray-200 focus:outline-none bg-white">
                             <option value="hari" {{ (isset($filter) && $filter == 'hari') ? 'selected' : '' }}>Harian</option>
                             <option value="minggu" {{ (isset($filter) && $filter == 'minggu') ? 'selected' : '' }}>Mingguan</option>
                             <option value="bulan" {{ (isset($filter) && $filter == 'bulan') ? 'selected' : '' }}>Bulanan</option>
@@ -119,24 +119,24 @@
                             </tr>
                             <tr>
                                 <td class="py-4 flex items-center text-gray-700 font-medium">
-                                    <div class="w-2 h-2 rounded-full bg-gray-300 mr-2 border border-gray-400"></div> Approval
+                                    <div class="w-2 h-2 rounded-full bg-gray-300 mr-2 border border-gray-400"></div> Persetujuan
                                 </td>
                                 <td class="py-4 text-gray-900 font-bold">Kajian Spesial...</td>
-                                <td class="py-4"><span class="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></div> Pending</span></td>
+                                <td class="py-4"><span class="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></div> Menunggu</span></td>
                             </tr>
                             <tr>
                                 <td class="py-4 flex items-center text-gray-700 font-medium">
                                     <div class="w-2 h-2 rounded-full bg-gray-300 mr-2 border border-gray-400"></div> Lokasi
                                 </td>
                                 <td class="py-4 text-gray-900 font-bold">Lengkapi data M...</td>
-                                <td class="py-4"><span class="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></div> New</span></td>
+                                <td class="py-4"><span class="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></div> Baru</span></td>
                             </tr>
                             <tr>
                                 <td class="py-4 flex items-center text-gray-700 font-medium">
                                     <div class="w-2 h-2 rounded-full bg-gray-300 mr-2 border border-gray-400"></div> Sistem
                                 </td>
                                 <td class="py-4 text-gray-900 font-bold">Update Profil P...</td>
-                                <td class="py-4"><span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-gray-500 mr-1.5"></div> Not Done</span></td>
+                                <td class="py-4"><span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md flex items-center w-max"><div class="w-1.5 h-1.5 rounded-full bg-gray-500 mr-1.5"></div> Belum Selesai</span></td>
                             </tr>
                         </tbody>
                     </table>

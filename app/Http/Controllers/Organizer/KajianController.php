@@ -95,7 +95,7 @@ class KajianController extends Controller
 
         Kajian::create($data);
 
-        return redirect()->route('organizer.kajian.index')->with('success', 'Kajian created successfully.');
+        return redirect()->route('organizer.kajian.index')->with('success', 'Data kajian berhasil ditambahkan.');
     }
 
     public function show(Kajian $kajian)
@@ -173,7 +173,7 @@ class KajianController extends Controller
 
         $kajian->update($data);
 
-        return redirect()->route('organizer.kajian.index')->with('success', 'Kajian updated successfully.');
+        return redirect()->route('organizer.kajian.index')->with('success', 'Data kajian berhasil diperbarui.');
     }
 
     public function destroy(Kajian $kajian)

@@ -22,7 +22,7 @@
         @guest
             <a href="{{ route('register') }}" class="btn btn-solid">Daftar Sekarang</a>
         @endguest
-        <a href="{{ url('/kajian') }}" class="btn btn-ghost-light">Cari Kajian →</a>
+        <a href="{{ url('/kajian') }}{{ request('lat') && request('lng') ? '?lat='.request('lat').'&lng='.request('lng') : '' }}" class="btn btn-ghost-light">Cari Kajian →</a>
       </div>
       
     </div>
@@ -131,7 +131,7 @@
         <span class="eyebrow" style="justify-content:center; color:var(--gold-deep); letter-spacing:2px; font-weight:800; font-size:15px; text-transform:uppercase; margin-bottom:12px;">JADWAL TERKINI</span>
         <h3 class="arabic" style="font-size:clamp(32px, 5vw, 46px); color:var(--jade-950); margin-top:0; line-height:1.2;">Kajian yang <em style="color:var(--gold-deep); font-style:italic;">tersedia minggu ini.</em></h3>
       </div>
-      <a href="{{ url('/kajian') }}" class="btn btn-outline" style="border-width:2px; font-weight:700; font-size:16px; padding:12px 28px;">Lihat Semua Kajian</a>
+      <a href="{{ url('/kajian') }}{{ request('lat') && request('lng') ? '?lat='.request('lat').'&lng='.request('lng') : '' }}" class="btn btn-outline" style="border-width:2px; font-weight:700; font-size:16px; padding:12px 28px;">Lihat Semua Kajian</a>
     </div>
 
     <div class="kajian-grid">
@@ -158,27 +158,10 @@
         @guest
             <a href="{{ route('register') }}" class="btn btn-solid" style="color:var(--gold-pale)">Daftar Sekarang</a>
         @endguest
-        <a href="{{ url('/kajian') }}" class="btn btn-outline">Cari Kajian</a>
+        <a href="{{ url('/kajian') }}{{ request('lat') && request('lng') ? '?lat='.request('lat').'&lng='.request('lng') : '' }}" class="btn btn-outline">Cari Kajian</a>
       </div>
   </div>
 </section>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    // Don't auto-request if we already have lat/lng or if user explicitly declined (we can use sessionStorage)
-    if (!urlParams.has('lat') && !urlParams.has('lng') && !sessionStorage.getItem('location_declined')) {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                window.location.href = `/?lat=${lat}&lng=${lng}`;
-            }, function(error) {
-                console.log("Geolocation error:", error);
-                sessionStorage.setItem('location_declined', 'true');
-            });
-        }
-    }
-});
-</script>
+
 @endsection

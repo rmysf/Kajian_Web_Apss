@@ -67,7 +67,7 @@
                 Terdekat
             </a>
         @else
-            <button type="button" onclick="requestLocation()" class="btn filter-btn btn-outline">
+            <button type="button" onclick="requestLocation(this)" class="btn filter-btn btn-outline" id="btn-terdekat">
                 <svg style="width:16px; height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 Terdekat
             </button>
@@ -90,26 +90,6 @@
         @endforeach
     </div>
 
-    <script>
-        function requestLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    let lat = position.coords.latitude;
-                    let lng = position.coords.longitude;
-                    let currentUrl = new URL(window.location.href);
-                    currentUrl.searchParams.set('nearby', '1');
-                    currentUrl.searchParams.set('lat', lat);
-                    currentUrl.searchParams.set('lng', lng);
-                    window.location.href = currentUrl.toString();
-                }, function(error) {
-                    alert('Gagal mendapatkan lokasi. Pastikan izin lokasi diaktifkan pada browser/device Anda.');
-                });
-            } else {
-                alert('Browser Anda tidak mendukung Geolocation.');
-            }
-        }
-    </script>
-
     <!-- Results List -->
     <div class="kajian-grid">
         @forelse($kajians as $kajian)
@@ -130,7 +110,7 @@
     
     <!-- Pagination -->
     <div style="margin-top:50px;">
-        {{ $kajians->links() }}
+        {{ $kajians->onEachSide(1)->links() }}
     </div>
 
 </div>

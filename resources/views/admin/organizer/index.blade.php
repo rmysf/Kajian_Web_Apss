@@ -63,7 +63,7 @@
         </div>
 
         <div class="px-6 py-4 border-t border-gray-200">
-            {{ $organizers->links() }}
+            {{ $organizers->onEachSide(1)->links() }}
         </div>
     </div>
 </x-admin-layout>

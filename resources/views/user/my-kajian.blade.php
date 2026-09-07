@@ -30,7 +30,7 @@
     
     <!-- Pagination -->
     <div style="margin-top:50px;">
-        {{ $attendances->links() }}
+        {{ $attendances->onEachSide(1)->links() }}
     </div>
 
 </div>
