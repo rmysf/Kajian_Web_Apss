@@ -24,9 +24,14 @@ class ProfileController extends Controller
             'phone' => 'nullable|string|max:20',
             'description' => 'nullable|string',
             'address' => 'nullable|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'latitude.between' => 'Titik koordinat latitude harus berada di antara -90 dan 90.',
+            'longitude.between' => 'Titik koordinat longitude harus berada di antara -180 dan 180.',
+            'latitude.numeric' => 'Latitude harus berupa angka.',
+            'longitude.numeric' => 'Longitude harus berupa angka.',
         ]);
 
         if ($request->hasFile('logo')) {

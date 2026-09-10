@@ -150,8 +150,8 @@
                                 <button type="button" @click="closeModal()" class="px-4 py-2 bg-white text-gray-700 border border-gray-300 font-bold rounded-lg hover:bg-gray-50 transition text-sm">
                                     Batal
                                 </button>
-                                <button type="submit" class="px-4 py-2 bg-brand-emerald-900 text-white font-bold rounded-lg hover:bg-brand-emerald-950 shadow-sm transition text-sm flex items-center">
-                                    <i data-lucide="save" class="w-4 h-4 mr-2"></i> <span x-text="isEdit ? 'Simpan Perubahan' : 'Tambah Kategori'"></span>
+                                <button type="submit" class="px-4 py-2 bg-brand-emerald-900 text-white font-bold rounded-lg hover:bg-brand-emerald-950 shadow-sm transition text-sm flex items-center justify-center">
+                                    <span x-text="isEdit ? 'Simpan Perubahan' : 'Tambah Kategori'"></span>
                                 </button>
                             </div>
                         </form>
