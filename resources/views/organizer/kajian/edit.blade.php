@@ -359,7 +359,7 @@
             function showSelectDropdown() {
                 if (mosqueSelect) {
                     mosqueSelect.style.display = 'block';
-                    mosqueSelect.value = ''; // Reset select to default option
+                    mosqueSelect.value = ''; 
                 }
                 if (customMosqueWrapper) {
                     customMosqueWrapper.style.display = 'none';
